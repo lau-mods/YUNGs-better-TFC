@@ -211,7 +211,7 @@ public final class ConversionGameTests {
 
     @GameTest(template = "empty", batch = BATCH)
     public static void hardeningUsesOnlyBlockDirectlyBelow(GameTestHelper helper) {
-        ConversionContext unsupported = NETHER.withBelowIsAir(true);
+        ConversionContext unsupported = NETHER.withPlacementBelow(true, false);
         assertConversion(helper, "netherrack", "tfcoverdims:hardened_netherrack", unsupported);
         assertConversion(helper, "stone", "tfc:rock/hardened/basalt", unsupported);
         assertConversion(helper, "cobblestone", "tfc:rock/hardened/basalt", unsupported);

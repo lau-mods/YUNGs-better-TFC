@@ -30,7 +30,7 @@
 
 ## Current implementation
 
-Milestone M03 provides the bootstrap, dependency boundary, stone, soil, wood, utility, light, metal, and structural hardening conversion core:
+Milestone M04 provides the bootstrap, dependency boundary, stone, soil, wood, utility, light, metal, plant, ore, display-entity, and structural hardening conversion core:
 
 - Distribution version `1.0.0` with `@Mod("yungsbettertfc")`.
 - Required and optional dependencies exactly as listed above.
@@ -45,6 +45,24 @@ Milestone M03 provides the bootstrap, dependency boundary, stone, soil, wood, ut
 - Furnace, blast furnace, and smoker become `tfc:firepit`; their horizontal facing supplies the TFC firepit axis and only these conversions discard Block Entity NBT. Vanilla cauldrons and barrels remain unchanged with their state and NBT.
 - Vanilla torch and candle families map to registered TFC blocks. Lantern, soul lantern, both campfires, and soul torches remain Vanilla.
 - Wrought Iron, Gold, and Copper use the maintained M03 mappings. Copper oxidation stage and registered stairs/slab shape are retained. Nether coal blocks become `tfc:bituminous_coal`; the specified utility and decoration keep list remains Vanilla.
+- Kelp becomes water; seagrass and the lower half of tall seagrass become TFC eel grass; the upper tall-seagrass half becomes water. Sea pickles, vines, cactus bases, and dead bushes use their registered TFC equivalents. Additional cactus blocks become air based on the processed template position index. Registered `tfc:plant/potted/*` outputs are used, while other plants remain Vanilla.
+- Vanilla Overworld and Deepslate ores use the maintained TFC ore priority table and the detected rock, with a Granite registry fallback. Nether Gold Ore, Nether Quartz Ore, and Ancient Debris always remain Vanilla. The same rules rewrite parseable Vanilla ore states in `final_state` NBT, copying only compatible properties and retaining trailing NBT.
+- Item frames, glow item frames, and armor stands convert supported Vanilla equipment to registered TFC Wrought Iron equipment in the Overworld and Nether. Incompatible item component, tag, and damage data is removed after replacement. Display entities are unchanged in the End or an unknown dimension.
+
+## M04 conversion tables
+
+| Vanilla input | Output |
+| --- | --- |
+| `kelp`, `kelp_plant` | `minecraft:water` |
+| `seagrass`, lower `tall_seagrass` | `tfc:plant/eel_grass` |
+| upper `tall_seagrass` | `minecraft:water` |
+| `sea_pickle`, `vine`, `dead_bush` | `tfc:sea_pickle`, `tfc:plant/ivy`, `tfc:plant/dead_bush` |
+| base `cactus`, upper `cactus` | `tfc:plant/silken_pincushion_cactus`, air |
+| `potted_*` | registered `tfc:plant/potted/<plant>` only |
+
+Coal ore tries `tfc:lignite` and then `tfc:bituminous_coal`. Iron ore tries normal Hematite, Magnetite, and Limonite. Copper, Gold, Lapis, Diamond, Emerald, and Redstone use normal Native Copper, normal Native Gold, Lapis Lazuli, Diamond, Emerald, and Cinnabar respectively. Rock-specific candidates try the detected rock and then Granite for each ore candidate. Normal and Deepslate inputs share the same result.
+
+Vanilla swords, axes, pickaxes, shovels, hoes, helmets, chestplates, leggings, boots, shields, and maces map to the matching TFC Wrought Iron item, with leggings mapped to greaves. Bows, crossbows, and tridents map to a Wrought Iron javelin. Missing output items preserve the original stack.
 
 ## M03 conversion tables
 
@@ -162,3 +180,8 @@ Child repositories can be checked out independently, so these rules remain in th
 
 - `M03GameTests` covers all registered target shapes for every Overworld wood row and all Crimson/Warped rows, including inherited door, stair, and slab state and longest-match `dark_oak` hint parsing.
 - Structure-pipeline tests cover TFC and Overdims wood utilities, Oak fallback, unchanged hanging signs and chest NBT, all three firepit conversions with axis and NBT removal, unchanged cauldron state and barrel loot NBT, every candle color, light exceptions, and the maintained metal and keep-list rows.
+
+## M04 verification
+
+- `M04GameTests` covers every maintained plant row, both tall-seagrass halves, a three-block cactus, unchanged non-target plants, registered and missing potted outputs, all normal and Deepslate ore rows, detected-rock outputs, Granite fallback, and Nether-native ore exclusions.
+- Structure-pipeline checks cover ore replacement inside `final_state` NBT and its Nether exclusions. Entity-pipeline checks cover item frames, glow item frames, armor stands, every maintained Wrought Iron equipment category, incompatible data removal, unrelated entities, and the End exclusion.

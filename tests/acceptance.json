@@ -107,6 +107,42 @@
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",
       "name": "legacymetalmappingsandkeeplist"
+    },
+    {
+      "acId": "AC-F007-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "aquaticplantsandcactus"
+    },
+    {
+      "acId": "AC-F007-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "untargetedplantsandregisteredpots"
+    },
+    {
+      "acId": "AC-F007-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "generaloresandgranitefallback"
+    },
+    {
+      "acId": "AC-F007-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "finalstateorerewriting"
+    },
+    {
+      "acId": "AC-F007-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "netheroresremain"
+    },
+    {
+      "acId": "AC-F007-005",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "displayentityequipmentandendexclusion"
     }
   ],
   "e2e": [],

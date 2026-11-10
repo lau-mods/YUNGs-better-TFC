@@ -45,7 +45,10 @@ public final class BlockConversions {
                     : original;
         }
 
-        ResourceLocation candidate = RockConversions.candidate(path, context.rock());
+        ResourceLocation candidate = OreConversions.candidate(path, context.rock());
+        if (candidate == null) {
+            candidate = RockConversions.candidate(path, context.rock());
+        }
         if (candidate == null) {
             candidate = SoilConversions.candidate(path, context.soil());
         }
@@ -60,6 +63,9 @@ public final class BlockConversions {
         }
         if (candidate == null) {
             candidate = MetalConversions.candidate(path, context.dimension());
+        }
+        if (candidate == null) {
+            candidate = PlantConversions.candidate(path, original, context.cactusBelow());
         }
         if (candidate == null) {
             return original;

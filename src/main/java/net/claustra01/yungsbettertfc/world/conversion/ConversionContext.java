@@ -5,9 +5,19 @@ public record ConversionContext(
         String rock,
         String soil,
         WoodHint woodHint,
-        boolean belowIsAir) {
+        boolean belowIsAir,
+        boolean cactusBelow) {
 
-    public ConversionContext withBelowIsAir(boolean belowIsAir) {
-        return new ConversionContext(dimension, rock, soil, woodHint, belowIsAir);
+    public ConversionContext(
+            DimensionKind dimension,
+            String rock,
+            String soil,
+            WoodHint woodHint,
+            boolean belowIsAir) {
+        this(dimension, rock, soil, woodHint, belowIsAir, false);
+    }
+
+    public ConversionContext withPlacementBelow(boolean belowIsAir, boolean cactusBelow) {
+        return new ConversionContext(dimension, rock, soil, woodHint, belowIsAir, cactusBelow);
     }
 }
