@@ -1,4 +1,31 @@
 {
-  "gameTests": [],
-  "e2e": []
+  "gameTests": [
+    {
+      "acId": "AC-F001-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "modloadswithoutbeneath"
+    },
+    {
+      "acId": "AC-F001-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "requireddependenciesdeclared"
+    },
+    {
+      "acId": "AC-F001-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "optionalyungmixingate"
+    }
+  ],
+  "e2e": [],
+  "startupChecks": [
+    {
+      "acId": "AC-F001-002",
+      "command": "./gradlew -PwithoutTfcOverdims=true -PoptionalYungMods=none runGameTestServer",
+      "log": "run/logs/latest.log",
+      "expectedMessage": "Mod yungsbettertfc requires tfcoverdims 0.1.4 or above"
+    }
+  ]
 }
