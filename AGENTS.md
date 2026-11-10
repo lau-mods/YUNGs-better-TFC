@@ -30,7 +30,7 @@
 
 ## Current implementation
 
-Milestone M02 provides the bootstrap, dependency boundary, and the stone, sandstone, soil, and structural hardening conversion core:
+Milestone M03 provides the bootstrap, dependency boundary, stone, soil, wood, utility, light, metal, and structural hardening conversion core:
 
 - Distribution version `1.0.0` with `@Mod("yungsbettertfc")`.
 - Required and optional dependencies exactly as listed above.
@@ -40,6 +40,41 @@ Milestone M02 provides the bootstrap, dependency boundary, and the stone, sandst
 - Overworld geology scans downward from the placement origin for at most 64 blocks. It detects `tfc:rock/raw/<rock>` and TFC soil-family blocks, caches the combined result in a bounded thread-safe placement-origin cache, and defaults to `granite` and `mollisol`. Nether conversion always uses `basalt` and `oxisol`.
 - Conversion output is accepted only when the block registry contains it, and compatible state properties are copied by property name and value. Missing output IDs preserve the original block.
 - Hardening uses only the block directly below each result. The processor indexes the processed template list in `finalizeProcessing`; positions outside that list use the existing level state.
+- The nine Overworld Vanilla wood families map to their TFC wood families. Crimson and Warped wood map to registered `tfcoverdims:wood/*` blocks only in the Nether; hanging signs remain Vanilla.
+- `finalizeProcessing` counts explicit wood IDs in the original template palette once per placement. Chest, trapped chest, lectern, and crafting table use that hint, default to TFC Oak, retain their original NBT, and use Overdims wood utilities for a Crimson or Warped hint.
+- Furnace, blast furnace, and smoker become `tfc:firepit`; their horizontal facing supplies the TFC firepit axis and only these conversions discard Block Entity NBT. Vanilla cauldrons and barrels remain unchanged with their state and NBT.
+- Vanilla torch and candle families map to registered TFC blocks. Lantern, soul lantern, both campfires, and soul torches remain Vanilla.
+- Wrought Iron, Gold, and Copper use the maintained M03 mappings. Copper oxidation stage and registered stairs/slab shape are retained. Nether coal blocks become `tfc:bituminous_coal`; the specified utility and decoration keep list remains Vanilla.
+
+## M03 conversion tables
+
+| Vanilla wood | TFC wood |
+| --- | --- |
+| `oak` | `oak` |
+| `spruce` | `spruce` |
+| `birch` | `birch` |
+| `jungle`, `acacia` | `acacia` |
+| `dark_oak`, `cherry`, `bamboo` | `oak` |
+| `mangrove` | `mangrove` |
+
+For these nine families, planks use `tfc:wood/planks/<wood>`, stairs and slabs use `tfc:wood/planks/<wood>_stairs` and `_slab`, and log, wood, stripped_log, stripped_wood, fence, fence_gate, door, trapdoor, button, pressure_plate, sign, and wall_sign use `tfc:wood/<shape>/<wood>`. Nether Crimson and Warped use the same shape forms under `tfcoverdims:wood/`, with stem and hyphae corresponding to log and wood. They convert only in the Nether; hanging signs and other Nether vegetation remain Vanilla. Oak and other Overworld woods still use TFC forms in the Nether.
+
+`finalizeProcessing` counts explicit wood block IDs from the original palette, using the longest matching wood name, once per block. Crimson and Warped count only in the Nether. The most frequent mapped wood supplies the utility hint; ties retain the first wood encountered, and an empty count defaults to TFC Oak. `chest`, `trapped_chest`, `lectern`, and `crafting_table` become `wood/chest/<wood>`, `wood/trapped_chest/<wood>`, `wood/lectern/<wood>`, and `wood/workbench/<wood>` in the hinted `tfc` or `tfcoverdims` namespace. Their NBT passes through unchanged.
+
+| Vanilla input | Output |
+| --- | --- |
+| `furnace`, `blast_furnace`, `smoker` | `tfc:firepit`; discard original Block Entity NBT and copy horizontal facing axis |
+| `torch`, `wall_torch` | `tfc:torch`, `tfc:wall_torch` |
+| `candle`, `<color>_candle` | `tfc:candle`, `tfc:candle/<color>` when registered |
+| `candle_cake`, `<color>_candle_cake` | `tfc:candle_cake`, `tfc:candle_cake/<color>` when registered |
+| `iron_bars`, `chain`, `iron_block`, `iron_trapdoor` | `tfc:metal/bars/wrought_iron`, `metal/chain/wrought_iron`, `metal/block/wrought_iron`, `metal/trapdoor/wrought_iron` |
+| `gold_block`, `raw_gold_block` | `tfc:metal/block/gold` |
+| `copper_block`, `cut_copper`, `cut_copper_slab`, `cut_copper_stairs` | `tfc:metal/block/copper`, `copper`, `copper_slab`, `copper_stairs` in that family |
+| `exposed_copper`, `exposed_cut_copper` and its slab/stairs; analogous `weathered_*` and `oxidized_*` | `tfc:metal/exposed_block/copper`, `weathered_block/copper`, or `oxidized_block/copper`, with `_slab` or `_stairs` for shapes |
+| `waxed_oxidized_cut_copper` and its slab/stairs only | `tfc:metal/oxidized_block/copper` and matching shapes; other waxed variants stay Vanilla |
+| Nether `coal_block` | `tfc:bituminous_coal`; Overworld coal block stays Vanilla |
+
+Cauldron, water/lava/powder snow cauldrons, barrel, lantern, soul lantern, campfire, soul campfire, soul torch, soul wall torch, anvil variants, smithing table, stonecutter, spawner, rail, and beds stay Vanilla with their state and NBT.
 
 ## M02 conversion tables
 
@@ -122,3 +157,8 @@ Child repositories can be checked out independently, so these rules remain in th
 
 - `ConversionGameTests` covers every rock, sandstone, and soil table row in Overworld/Nether contexts, verifies all mapped categories remain unchanged in an End/NONE context, and checks state inheritance and missing-registry fallback.
 - Its structure-pipeline checks detect TFC raw rock and soil below a placement origin and exercise template-indexed hardening for unsupported and supported full blocks and unsupported stairs, slabs, and walls.
+
+## M03 verification
+
+- `M03GameTests` covers all registered target shapes for every Overworld wood row and all Crimson/Warped rows, including inherited door, stair, and slab state and longest-match `dark_oak` hint parsing.
+- Structure-pipeline tests cover TFC and Overdims wood utilities, Oak fallback, unchanged hanging signs and chest NBT, all three firepit conversions with axis and NBT removal, unchanged cauldron state and barrel loot NBT, every candle color, light exceptions, and the maintained metal and keep-list rows.

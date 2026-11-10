@@ -11,7 +11,9 @@ import net.claustra01.yungsbettertfc.world.conversion.BlockConversions;
 import net.claustra01.yungsbettertfc.world.conversion.ConversionContext;
 import net.claustra01.yungsbettertfc.world.conversion.DimensionKind;
 import net.claustra01.yungsbettertfc.world.conversion.GeologyDetector;
+import net.claustra01.yungsbettertfc.world.conversion.WoodHint;
 import net.minecraft.core.BlockPos;
+import net.dries007.tfc.common.blocks.devices.FirepitBlock;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -44,11 +46,12 @@ public final class TfcBlockReplacementProcessor extends StructureProcessor {
         }
 
         ConversionContext context;
+        WoodHint woodHint = WoodHint.fromOriginalBlocks(originalBlockInfos, dimension);
         if (dimension == DimensionKind.NETHER) {
-            context = new ConversionContext(dimension, "basalt", "oxisol", "oak", false);
+            context = new ConversionContext(dimension, "basalt", "oxisol", woodHint, false);
         } else {
             GeologyDetector.Geology geology = GeologyDetector.detect(level, offset);
-            context = new ConversionContext(dimension, geology.rock(), geology.soil(), "oak", false);
+            context = new ConversionContext(dimension, geology.rock(), geology.soil(), woodHint, false);
         }
 
         Map<BlockPos, BlockState> templateByPosition = new HashMap<>();
@@ -64,7 +67,9 @@ public final class TfcBlockReplacementProcessor extends StructureProcessor {
                     ? templateStateBelow.isAir()
                     : level.getBlockState(below).isAir();
             BlockState converted = BlockConversions.convert(info.state(), context.withBelowIsAir(belowIsAir));
-            result.add(new StructureTemplate.StructureBlockInfo(info.pos(), converted, info.nbt()));
+            boolean clearNbt = converted.getBlock() instanceof FirepitBlock
+                    && info.state().getBlock() != converted.getBlock();
+            result.add(new StructureTemplate.StructureBlockInfo(info.pos(), converted, clearNbt ? null : info.nbt()));
         }
         return result;
     }

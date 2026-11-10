@@ -50,12 +50,27 @@ public final class BlockConversions {
             candidate = SoilConversions.candidate(path, context.soil());
         }
         if (candidate == null) {
+            candidate = WoodConversions.candidate(path, context);
+        }
+        if (candidate == null) {
+            candidate = UtilityConversions.candidate(path);
+        }
+        if (candidate == null) {
+            candidate = LightConversions.candidate(path);
+        }
+        if (candidate == null) {
+            candidate = MetalConversions.candidate(path, context.dimension());
+        }
+        if (candidate == null) {
             return original;
         }
         if (context.belowIsAir() && RockConversions.isHardenable(candidate, context.rock())) {
             candidate = RockConversions.hardened(context.rock());
         }
-        return RegistryLookup.stateOrOriginal(candidate, original);
+        BlockState converted = RegistryLookup.stateOrOriginal(candidate, original);
+        return UtilityConversions.isFirepitInput(path)
+                ? UtilityConversions.applyFirepitAxis(original, converted)
+                : converted;
     }
 
 }

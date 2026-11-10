@@ -65,6 +65,48 @@
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",
       "name": "nethernativeblocksstayunchanged"
+    },
+    {
+      "acId": "AC-F005-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "overworldwoodfamiliesandstates"
+    },
+    {
+      "acId": "AC-F005-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "netherwoodfamilies"
+    },
+    {
+      "acId": "AC-F005-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "woodhintsutilitiesnbtandhangingsigns"
+    },
+    {
+      "acId": "AC-F006-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "furnacesbecomefirepitsanddiscardnbt"
+    },
+    {
+      "acId": "AC-F006-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "cauldronsandbarrelstayvanilla"
+    },
+    {
+      "acId": "AC-F006-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "lightsconvertandexceptionsstayvanilla"
+    },
+    {
+      "acId": "AC-F006-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "legacymetalmappingsandkeeplist"
     }
   ],
   "e2e": [],

@@ -8,6 +8,7 @@ import net.claustra01.yungsbettertfc.YungsBetterTfc;
 import net.claustra01.yungsbettertfc.world.conversion.BlockConversions;
 import net.claustra01.yungsbettertfc.world.conversion.ConversionContext;
 import net.claustra01.yungsbettertfc.world.conversion.DimensionKind;
+import net.claustra01.yungsbettertfc.world.conversion.WoodHint;
 import net.claustra01.yungsbettertfc.world.processor.TfcBlockReplacementProcessor;
 import net.claustra01.yungsbettertfc.world.processor.ModProcessors;
 import net.minecraft.core.BlockPos;
@@ -32,11 +33,11 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public final class ConversionGameTests {
     private static final String BATCH = "bootstrap";
     private static final ConversionContext OVERWORLD =
-            new ConversionContext(DimensionKind.OVERWORLD, "rhyolite", "andisol", "oak", false);
+            new ConversionContext(DimensionKind.OVERWORLD, "rhyolite", "andisol", WoodHint.OAK, false);
     private static final ConversionContext NETHER =
-            new ConversionContext(DimensionKind.NETHER, "basalt", "oxisol", "oak", false);
+            new ConversionContext(DimensionKind.NETHER, "basalt", "oxisol", WoodHint.OAK, false);
     private static final ConversionContext END =
-            new ConversionContext(DimensionKind.NONE, "granite", "mollisol", "oak", false);
+            new ConversionContext(DimensionKind.NONE, "granite", "mollisol", WoodHint.OAK, false);
 
     private ConversionGameTests() {}
 
@@ -71,7 +72,7 @@ public final class ConversionGameTests {
                 "Stair facing must be inherited");
 
         ConversionContext missingRock = new ConversionContext(
-                DimensionKind.OVERWORLD, "not_registered", "andisol", "oak", false);
+                DimensionKind.OVERWORLD, "not_registered", "andisol", WoodHint.OAK, false);
         helper.assertTrue(BlockConversions.convert(eastFacing, missingRock) == eastFacing,
                 "A missing output registry ID must preserve the original state");
         helper.succeed();

@@ -4,7 +4,7 @@ public record ConversionContext(
         DimensionKind dimension,
         String rock,
         String soil,
-        String woodHint,
+        WoodHint woodHint,
         boolean belowIsAir) {
 
     public ConversionContext withBelowIsAir(boolean belowIsAir) {
