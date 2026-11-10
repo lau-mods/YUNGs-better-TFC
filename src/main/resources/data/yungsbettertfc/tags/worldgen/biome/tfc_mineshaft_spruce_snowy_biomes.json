@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#tfc:is_glaciated",
+    "tfc:glacially_carved_mountains",
+    "tfc:glacially_carved_oceanic_mountains",
+    "tfc:tuyas",
+    "tfc:meltwater_lake"
+  ]
+}

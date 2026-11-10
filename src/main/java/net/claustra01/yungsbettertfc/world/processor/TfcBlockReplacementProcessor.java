@@ -12,7 +12,6 @@ import net.claustra01.yungsbettertfc.world.conversion.ConversionContext;
 import net.claustra01.yungsbettertfc.world.conversion.DimensionKind;
 import net.claustra01.yungsbettertfc.world.conversion.EquipmentConversions;
 import net.claustra01.yungsbettertfc.world.conversion.FinalStateRewriter;
-import net.claustra01.yungsbettertfc.world.conversion.GeologyDetector;
 import net.claustra01.yungsbettertfc.world.conversion.WoodHint;
 import net.minecraft.core.BlockPos;
 import net.dries007.tfc.common.blocks.devices.FirepitBlock;
@@ -49,14 +48,8 @@ public final class TfcBlockReplacementProcessor extends StructureProcessor {
             return processedBlockInfos;
         }
 
-        ConversionContext context;
         WoodHint woodHint = WoodHint.fromOriginalBlocks(originalBlockInfos, dimension);
-        if (dimension == DimensionKind.NETHER) {
-            context = new ConversionContext(dimension, "basalt", "oxisol", woodHint, false);
-        } else {
-            GeologyDetector.Geology geology = GeologyDetector.detect(level, offset);
-            context = new ConversionContext(dimension, geology.rock(), geology.soil(), woodHint, false);
-        }
+        ConversionContext context = ConversionContext.at(level, offset, dimension, woodHint);
 
         Map<BlockPos, BlockState> templateByPosition = new HashMap<>();
         for (StructureTemplate.StructureBlockInfo info : processedBlockInfos) {

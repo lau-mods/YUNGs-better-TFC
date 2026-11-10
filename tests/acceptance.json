@@ -145,6 +145,66 @@
       "name": "displayentityequipmentandendexclusion"
     },
     {
+      "acId": "AC-F002-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "overworldtemplateuseslocalgeology"
+    },
+    {
+      "acId": "AC-F002-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethertemplateusesdedicatedconversions"
+    },
+    {
+      "acId": "AC-F002-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "endcitytemplateremainsunchanged"
+    },
+    {
+      "acId": "AC-F002-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "displayentityequipmentandendexclusion"
+    },
+    {
+      "acId": "AC-F008-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "biometagsextendyungtags"
+    },
+    {
+      "acId": "AC-F008-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "directpiececontextandoptionalmixins"
+    },
+    {
+      "acId": "AC-F008-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "optionalpiecesplaceconvertedblocks"
+    },
+    {
+      "acId": "AC-F008-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethertemplateusesdedicatedconversions"
+    },
+    {
+      "acId": "AC-F008-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "betterfortressesaddsnoworldgendefinition"
+    },
+    {
+      "acId": "AC-F008-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "targettemplatesappendprocessoronce"
+    },
+    {
       "acId": "AC-F009-001",
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",

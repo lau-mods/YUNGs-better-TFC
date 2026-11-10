@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "tfc:dune_sea",
+    "tfc:grassy_dunes",
+    "tfc:salt_flats",
+    "tfc:mud_flats",
+    "tfc:coastal_dunes"
+  ]
+}

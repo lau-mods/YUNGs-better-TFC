@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "tfc:mesas",
+    "tfc:buttes",
+    "tfc:hoodoos",
+    "tfc:rocky_plateau",
+    "tfc:burren_plateau"
+  ]
+}
