@@ -8,7 +8,7 @@ Mod ID: yungsbettertfc
 ## Platform
 
 Minecraft: 1.21.1
-NeoForge: 21.1.219
+NeoForge: 21.1.264
 Java: 21
 
 ## Purpose
@@ -25,7 +25,7 @@ YUNG's Better Series の構造物をTerraFirmaCraft（TFC）の地形に生成�
 
 #### Description
 
-配布バージョンは `1.0.0`。Minecraftは `1.21.1` のみ、Javaは21、初期NeoForge基準は `21.1.219` とする。必須依存は `tfc`、`yungsapi`、`tfcoverdims`。任意依存は `betterdungeons`、`bettermineshafts`、`betterstrongholds`、`betteroceanmonuments`、`betterfortresses` の5種類。`beneath` は依存定義、コード、構造物対象名前空間および独自マップから除去する。任意MODの有無で起動が失敗してはならない。同じMinecraft 1.21.1向けの後続依存MOD更新に対応する設計とする。Mod IDは引き継ぐが、事実上の新規実装として開発を始める。
+配布バージョンは `1.0.0`。Minecraftは `1.21.1` のみ、Javaは21、初期NeoForge基準は `21.1.264` とする。必須依存は `tfc`、`yungsapi`、`tfcoverdims`。任意依存は `betterdungeons`、`bettermineshafts`、`betterstrongholds`、`betteroceanmonuments`、`betterfortresses` の5種類。`beneath` は依存定義、コード、構造物対象名前空間および独自マップから除去する。任意MODの有無で起動が失敗してはならない。同じMinecraft 1.21.1向けの後続依存MOD更新に対応する設計とする。Mod IDは引き継ぐが、事実上の新規実装として開発を始める。
 
 #### Acceptance Criteria
 
