@@ -1,0 +1,30 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/axe_head/steel",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/saw_blade/steel",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/axe/steel",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/saw/steel",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

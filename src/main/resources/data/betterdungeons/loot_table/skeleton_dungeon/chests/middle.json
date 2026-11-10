@@ -1,0 +1,79 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/coal_like",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/coal_like",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "tfc:torch",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 5.0,
+                "min": 3.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:stick",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 10
+        }
+      ],
+      "rolls": {
+        "max": 5.0,
+        "min": 3.0,
+        "type": "minecraft:uniform"
+      }
+    }
+  ],
+  "type": "minecraft:chest"
+}

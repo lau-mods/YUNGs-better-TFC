@@ -1,0 +1,97 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 4.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/dangerous",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 4.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/dangerous",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 2.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 2.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 7.0,
+                "min": 5.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:bone",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "minecraft:golden_apple",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "minecraft:ender_pearl",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": {
+        "max": 5.0,
+        "min": 4.0,
+        "type": "minecraft:uniform"
+      }
+    }
+  ],
+  "type": "minecraft:chest"
+}

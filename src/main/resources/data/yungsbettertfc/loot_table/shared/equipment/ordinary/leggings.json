@@ -1,0 +1,50 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/unfinished_greaves/copper",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/greaves/copper",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_greaves/bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/greaves/bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_greaves/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/greaves/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_greaves/black_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/greaves/black_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

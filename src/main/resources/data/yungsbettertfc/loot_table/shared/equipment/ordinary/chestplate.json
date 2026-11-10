@@ -1,0 +1,50 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/unfinished_chestplate/copper",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/chestplate/copper",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_chestplate/bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/chestplate/bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_chestplate/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/chestplate/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_chestplate/black_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/chestplate/black_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

@@ -1,0 +1,18 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/ingot/steel",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "tfc:metal/ingot/black_steel",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

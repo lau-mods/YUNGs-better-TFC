@@ -1,0 +1,15 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "expand": true,
+          "name": "yungsbettertfc:loot/seeds",
+          "type": "minecraft:tag"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

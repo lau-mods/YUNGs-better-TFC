@@ -1,0 +1,134 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 3.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/dangerous",
+          "weight": 3
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 7.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/small_ores/iron",
+          "weight": 3
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 3.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/dangerous",
+          "weight": 3
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 7.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "tfc:ore/small_native_gold",
+          "type": "minecraft:item",
+          "weight": 3
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 3.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 2.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 3.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:redstone",
+          "type": "minecraft:item",
+          "weight": 3
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 3.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 3
+        }
+      ],
+      "rolls": {
+        "max": 2.0,
+        "min": 1.0,
+        "type": "minecraft:uniform"
+      }
+    }
+  ],
+  "type": "minecraft:chest"
+}

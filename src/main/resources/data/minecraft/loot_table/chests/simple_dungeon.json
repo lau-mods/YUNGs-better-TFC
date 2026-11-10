@@ -1,0 +1,295 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "name": "minecraft:saddle",
+          "type": "minecraft:item",
+          "weight": 20
+        },
+        {
+          "name": "minecraft:golden_apple",
+          "type": "minecraft:item",
+          "weight": 15
+        },
+        {
+          "name": "minecraft:enchanted_golden_apple",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "minecraft:music_disc_otherside",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "minecraft:music_disc_13",
+          "type": "minecraft:item",
+          "weight": 15
+        },
+        {
+          "name": "minecraft:music_disc_cat",
+          "type": "minecraft:item",
+          "weight": 15
+        },
+        {
+          "name": "minecraft:name_tag",
+          "type": "minecraft:item",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/ordinary/horse_armor",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/ordinary/horse_armor",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/ordinary/horse_armor",
+          "weight": 5
+        },
+        {
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "minecraft:book",
+          "type": "minecraft:item",
+          "weight": 10
+        }
+      ],
+      "rolls": {
+        "max": 3.0,
+        "min": 1.0,
+        "type": "minecraft:uniform"
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/ordinary",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/ordinary",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/produce",
+          "weight": 20
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/produce",
+          "weight": 20
+        },
+        {
+          "name": "minecraft:bucket",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:redstone",
+          "type": "minecraft:item",
+          "weight": 15
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/coal_like",
+          "weight": 15
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/seeds",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/seeds",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/seeds",
+          "weight": 10
+        }
+      ],
+      "rolls": {
+        "max": 4.0,
+        "min": 1.0,
+        "type": "minecraft:uniform"
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 8.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:bone",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 8.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:gunpowder",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 8.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:rotten_flesh",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 8.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:string",
+          "type": "minecraft:item",
+          "weight": 10
+        }
+      ],
+      "rolls": 3.0
+    }
+  ],
+  "random_sequence": "minecraft:chests/simple_dungeon",
+  "type": "minecraft:chest"
+}

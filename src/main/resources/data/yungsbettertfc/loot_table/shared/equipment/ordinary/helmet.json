@@ -1,0 +1,50 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/unfinished_helmet/copper",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/helmet/copper",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_helmet/bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/helmet/bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_helmet/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/helmet/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/unfinished_helmet/black_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/helmet/black_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

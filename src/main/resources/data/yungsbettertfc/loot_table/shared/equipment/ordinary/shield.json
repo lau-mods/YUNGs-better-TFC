@@ -1,0 +1,30 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/shield/copper",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/shield/bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/shield/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/shield/black_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

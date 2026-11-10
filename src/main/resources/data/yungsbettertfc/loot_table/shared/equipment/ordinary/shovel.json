@@ -1,0 +1,50 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:metal/shovel_head/copper",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/shovel/copper",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/shovel_head/bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/shovel/bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/shovel_head/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/shovel/bismuth_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "tfc:metal/shovel_head/black_bronze",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "name": "tfc:metal/shovel/black_bronze",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

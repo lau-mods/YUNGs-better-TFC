@@ -1,0 +1,326 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "minecraft:golden_apple",
+          "type": "minecraft:item",
+          "weight": 5
+        },
+        {
+          "name": "minecraft:enchanted_golden_apple",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly",
+              "options": [
+                "smite"
+              ]
+            }
+          ],
+          "name": "minecraft:book",
+          "type": "minecraft:item",
+          "weight": 2
+        },
+        {
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "minecraft:book",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly",
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/ordinary/bow",
+          "weight": 3
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:slowness"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:leaping"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:fire_resistance"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:swiftness"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:long_swiftness"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:harming"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:poison"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "components": {
+                "potion_contents": "minecraft:weakness"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "minecraft:tipped_arrow",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": {
+        "max": 4.0,
+        "min": 2.0,
+        "type": "minecraft:uniform"
+      }
+    },
+    {
+      "entries": [
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 6.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/ordinary",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/ingots/ordinary",
+          "weight": 5
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 4.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:redstone",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "name": "minecraft:name_tag",
+          "type": "minecraft:item",
+          "weight": 1
+        },
+        {
+          "name": "minecraft:lead",
+          "type": "minecraft:item",
+          "weight": 1
+        }
+      ],
+      "rolls": {
+        "max": 3.0,
+        "min": 1.0,
+        "type": "minecraft:uniform"
+      }
+    },
+    {
+      "entries": [
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 8.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:bone",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "count": {
+                "max": 8.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/fertilizers",
+          "weight": 10
+        }
+      ],
+      "rolls": 2
+    }
+  ],
+  "type": "minecraft:chest"
+}

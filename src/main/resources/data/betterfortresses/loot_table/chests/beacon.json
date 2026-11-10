@@ -1,0 +1,82 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 8.0,
+                "min": 4.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:arrow",
+          "type": "minecraft:item",
+          "weight": 5
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 3.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:fire_charge",
+          "type": "minecraft:item",
+          "weight": 5
+        }
+      ],
+      "rolls": {
+        "max": 4.0,
+        "min": 2.0,
+        "type": "minecraft:uniform"
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/dangerous/bow",
+          "weight": 20
+        },
+        {
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 10.0,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/dangerous/bow",
+          "weight": 10
+        },
+        {
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 20.0,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/equipment/dangerous/bow",
+          "weight": 5
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:chest"
+}

@@ -1,0 +1,38 @@
+{
+  "pools": [
+    {
+      "entries": [
+        {
+          "name": "tfc:powder/flux",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "minecraft:glass",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "minecraft:glass_pane",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "tfc:kaolin_clay",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "tfc:powder/wood_ash",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "tfc:powder/saltpeter",
+          "type": "minecraft:item"
+        },
+        {
+          "name": "tfc:powder/sylvite",
+          "type": "minecraft:item"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "type": "minecraft:generic"
+}

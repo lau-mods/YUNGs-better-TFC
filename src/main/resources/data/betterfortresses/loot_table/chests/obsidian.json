@@ -1,0 +1,67 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 5.0,
+                "min": 2.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/utility",
+          "weight": 50
+        },
+        {
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "max": 3.0,
+                "min": 1.0,
+                "type": "minecraft:uniform"
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/utility",
+          "weight": 50
+        }
+      ],
+      "rolls": {
+        "max": 2.0,
+        "min": 1.0,
+        "type": "minecraft:uniform"
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "name": "minecraft:flint_and_steel",
+          "type": "minecraft:item",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:loot_table",
+          "value": "yungsbettertfc:shared/gems",
+          "weight": 5
+        }
+      ],
+      "rolls": {
+        "max": 1.0,
+        "min": 0.0,
+        "type": "minecraft:uniform"
+      }
+    }
+  ],
+  "type": "minecraft:chest"
+}
