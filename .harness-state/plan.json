@@ -1,0 +1,154 @@
+{
+  "milestones": [
+    {
+      "id": "M01",
+      "features": [
+        "F-001"
+      ],
+      "dependsOn": [],
+      "approach": "テンプレート状態のプロジェクトを `yungsbettertfc` v1.0.0の土台に置き換える。com.example.examplemod（ExampleMod/Config/ExampleModClient/examplemod lang、client config画面）を削除し、旧版と同じpackage `net.claustra01.yungsbettertfc` に `@Mod(\"yungsbettertfc\")` のmain classを新設する（不要な設定・GUIは作らない）。gradle.propertiesは `mod_version=1.0.0` とし、NeoForgeはPROJECT.mdの基準 `21.1.219` に合わせる（mods.tomlのneoforge versionRangeの下限は `[21.1.219,)`）。build.gradleに、Modrinth Maven等の公開repositoryから `exclusiveContent` で解決するTFC、YUNG's API、TFC Overdims v0.1.4系、5種類のYUNG MOD（すべて1.21.1/NeoForge版）を `compileOnly` と `localRuntime` で追加する。JARはcommitしない。neoforge.mods.tomlでは `tfc`、`yungsapi`、`tfcoverdims` をtype=required・ordering=AFTER、`betterdungeons`/`bettermineshafts`/`betterstrongholds`/`betteroceanmonuments`/`betterfortresses` をtype=optional・ordering=AFTERで宣言する。`beneath` はどこにも記載しない。version rangeは確認済みの下限だけを固定し、将来版の互換を保証する上限は書かない。`[[mixins]]` で `yungsbettertfc.mixins.json` を登録し、IMixinConfigPlugin（例: `YungsBetterTfcMixinPlugin`）を用意する。このpluginは `LoadingModList` でmod存在を調べ、mod別package（`mixin.bettermineshafts.*`、`mixin.betterdungeons.*` 等）のMixinを、対象modが導入されている場合だけ適用する。後のM06ではこのgateの下にMixinを追加する。任意modのクラスは通常のロード経路から参照しない（optional modの判定は `ModList`/`LoadingModList` の文字列IDだけで行う）。GameTest基盤（`@GameTestHolder`/RegisterGameTestsEvent、namespace yungsbettertfc、空テンプレートnbt）を作り、mod読込・必須依存の存在・`beneath` 非ロードを確認するbootstrap testを最低1件登録する（テストが0件だとrunGameTestServerが失敗するため）。repo rootに `AGENTS.md` を作成し、共通規約・依存表・現在の仕様の正本を記載する。READMEは利用者向けに絞る。検証は `./gradlew build` と `runGameTestServer` で行い、専用サーバーを任意YUNG mod 0/1/5種の構成で起動し、tfcoverdims欠落時に依存欠落エラーが出ることも確認する。結果は tests/acceptance.json に記録する。",
+      "scope": [
+        "gradle.properties",
+        "build.gradle",
+        "settings.gradle",
+        "src/main/templates/META-INF/neoforge.mods.toml",
+        "src/main/java/com/example/examplemod/ (削除)",
+        "src/main/resources/assets/examplemod/ (削除)",
+        "src/main/java/net/claustra01/yungsbettertfc/YungsBetterTfc.java",
+        "src/main/java/net/claustra01/yungsbettertfc/mixin/YungsBetterTfcMixinPlugin.java",
+        "src/main/resources/yungsbettertfc.mixins.json",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "src/main/resources/data/yungsbettertfc/structure/ (GameTest用空テンプレート)",
+        "AGENTS.md",
+        "README.md",
+        "tests/acceptance.json",
+        ".github/workflows/build.yml"
+      ]
+    },
+    {
+      "id": "M02",
+      "features": [
+        "F-003",
+        "F-004"
+      ],
+      "dependsOn": [
+        "M01"
+      ],
+      "approach": "ブロック変換の中核を作る。v0.4.3の `TfcBlockReplacementProcessor` の岩石検出と石材・砂岩・土壌変換をJavaコードで照合したうえで移植し、次の責務に分ける。(1) `StructureProcessorType` をDeferredRegister（Registries.STRUCTURE_PROCESSOR、`yungsbettertfc:tfc_block_replacement`、unit MapCodec）に登録する。(2) `DimensionKind` 解決器。LevelReaderが `WorldGenLevel`/`ServerLevelAccessor` なら `getLevel().dimension()` でOVERWORLD/NETHERを判定し、それ以外（End、カスタムディメンション、取得失敗）はNONEとして一切変換しない。(3) 地質検出。配置基準位置から下方向に最大64ブロック走査してTFC raw rockと土壌種を求め、基準位置ごとにサイズ上限付きのthread-safe cacheへ記憶する。不明時は `granite`/`mollisol` とし、Netherでは常に `basalt`/`oxisol` を使う。(4) 純粋関数 `BlockConversions.convert(BlockState, ConversionContext)`。contextはdimension、rock、soil、wood hint、真下が空気かどうかを持つ。GameTestでNether/End条件を直接検証できるようにこの形にする。(5) 共通util。`minecraft:` 名前空間だけを入力にし、Airをskipし、`infested_` を除去してから処理する。出力IDは `BuiltInRegistries.BLOCK` で存在を確認し、存在しなければ元ブロックを維持する。同名・同値で設定可能なpropertyだけをコピーする。表はPROJECT.mdの岩石・石材表と砂岩・土壌表をそのまま実装する（granite/diorite/tuff系、polished系→smooth、tuff_bricks/chiseled_tuff系、`dirt_path`→`tfc:grass_path/<soil>`）。Deepslate系とBlackstone系の一般建材はどのディメンションでも維持する。Netherでは石材をbasalt、土壌をoxisolにし、砂岩と砂は赤・黄を維持する。Nether固有ブロック（blackstone、polished_blackstone、basalt、polished_basalt、soul_sand、soul_soil、nether_gold_ore、nether_quartz_ore、ancient_debris）は明示的なkeep-listにする。硬化規則は、raw/cobble/mossy_cobbleのフルブロックで真下が空気の場合だけ `tfc:rock/hardened/<rock>` にし、Netherの `netherrack` は真下が空気の場合だけ `tfcoverdims:hardened_netherrack` にする。真下の判定は `finalizeProcessing` で処理後のテンプレートblock listを位置索引化して行い、テンプレート範囲外は既存のlevel stateを見る。それ以外の支持条件は評価しない。Overdimsのタグは変更しない。TFC/OverdimsのJARでraw/smooth/bricks/hardened等の実登録IDと形状名を確認する。GameTestは、Overworld/Nether/Endの各contextで表の全行を変換するテストと、TFC岩石の上に配置したテンプレート経由のテストを用意し、property継承と存在しないIDで元ブロックを維持することも確認する。AGENTS.mdに変換表と検出規則を記録する。",
+      "scope": [
+        "src/main/java/net/claustra01/yungsbettertfc/world/processor/TfcBlockReplacementProcessor.java",
+        "src/main/java/net/claustra01/yungsbettertfc/world/processor/ModProcessors.java",
+        "src/main/java/net/claustra01/yungsbettertfc/world/conversion/ (DimensionKind, ConversionContext, BlockConversions, RockConversions, SoilConversions, GeologyDetector, StateCopier, RegistryLookup)",
+        "src/main/java/net/claustra01/yungsbettertfc/YungsBetterTfc.java",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "AGENTS.md",
+        "tests/acceptance.json"
+      ]
+    },
+    {
+      "id": "M03",
+      "features": [
+        "F-005",
+        "F-006"
+      ],
+      "dependsOn": [
+        "M02"
+      ],
+      "approach": "M02の `BlockConversions` に木材・設備・光源・金属の変換を追加する。木材の出力は木材種から決め、構造物単位の木材hintを共有して使う。Overworldの9種類のVanilla木材をPROJECT.mdの表どおりにTFC木材種へ対応付ける（jungle→acacia、dark_oak/cherry/bamboo→oak）。対象形状はplanks/stairs/slab/log/wood/stripped_log/stripped_wood/fence/fence_gate/door/trapdoor/button/pressure_plate/sign/wall_signで、TFCの実際の登録名（例: `tfc:wood/planks/<wood>`、`tfc:wood/planks/<wood>_stairs`、`tfc:wood/log/<wood>`）はv0.4.3コードとTFC JARで確認して固定する。Nether木材のcrimson/warpedは、OverdimsWoodBlocks v0.1.4の実登録に基づいて `tfcoverdims:wood/...` へ変換する。Hanging Signは対応先がないため維持する。Nether内のOak等は通常のTFC表に従い、Fungus/Nylium/Roots等には触れない。木材種のparseは既知の種名リストから最長一致で行い、旧版の `dark_oak` を先頭の `_` で切る不具合を直す。木材hintは `finalizeProcessing` でテンプレートの元block listから明示的な木材IDを集計して決め、種名を持たない `chest`/`trapped_chest`/`lectern`/`crafting_table` だけに使う。出力は対応するTFC/OverdimsのChest、Trapped Chest、Lectern、Workbenchで、hint不明時はoak、出力が未登録なら元ブロックを維持する。ChestのNBTは旧版どおりそのまま渡し、独自の検証や変換はしない。`furnace`/`blast_furnace`/`smoker` は `tfc:firepit` にし、StructureBlockInfoのnbtをnullにする（NBT破棄はこの経路だけ）。水平facingはTFC FirepitBlockのaxis property（JARで確認）へ変換して設定する。torch/wall_torch→`tfc:torch`/`tfc:wall_torch`、candle/各色→`tfc:candle`/登録済みの色付きCandle、candle_cakeは登録済みの対応先がある場合だけ変換する。金属は旧版の表を照合して移植する（iron_bars/chain/iron_block/iron_trapdoor→wrought_iron、gold_block/raw_gold_block→`tfc:metal/block/gold`、Copperは酸化段階と形状を維持、Netherのcoal_block→`tfc:bituminous_coal`）。Cauldron4種、Barrel、Lantern2種、Campfire2種、soul torch、Anvil、Smithing Table、Stonecutter、Spawner、Rail、Bedはkeep-listに入れる。GameTestは、木材表全行（Overworld/Nether）、ドアの上下・階段の向き・slab typeの継承、dark_oak hint、hint不明時のoak、Hanging Signの維持、Firepitの軸とNBT破棄、Cauldron level・Barrel LootTableの保持、各光源・金属行を検証する。AGENTS.mdも更新する。",
+      "scope": [
+        "src/main/java/net/claustra01/yungsbettertfc/world/conversion/ (WoodConversions, WoodHint, UtilityConversions, LightConversions, MetalConversions)",
+        "src/main/java/net/claustra01/yungsbettertfc/world/processor/TfcBlockReplacementProcessor.java",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "AGENTS.md",
+        "tests/acceptance.json"
+      ]
+    },
+    {
+      "id": "M04",
+      "features": [
+        "F-007"
+      ],
+      "dependsOn": [
+        "M02"
+      ],
+      "approach": "v0.4.3の植物・鉱石・エンティティ変換をコードで照合して移植する。植物は表にある行だけを実装する。kelp/kelp_plant→water、seagrassとtall_seagrassの下半分→`tfc:plant/eel_grass`、tall_seagrassの上半分→water、sea_pickle→`tfc:sea_pickle`、vine→`tfc:plant/ivy`、dead_bush→`tfc:plant/dead_bush`。cactusは真下が同じcactusかどうかで基部と上段を判定し（M02の `finalizeProcessing` の位置索引を再利用）、基部を `tfc:plant/silken_pincushion_cactus`、上段をAirにする。`potted_*` は `tfc:plant/potted/<plant>` が登録済みの場合だけ変換する。草・シダ・キノコ・花・葉・苗木は変換しない。鉱石はPROJECT.mdの表と旧版のregistry存在判定・graniteフォールバックで実装する（coalは `tfc:lignite`→`tfc:bituminous_coal` の順に存在するものを使い、ironはhematite→magnetite→limonite）。岩石種はM02の検出結果を使う。nether_gold_ore/nether_quartz_ore/ancient_debrisはどのディメンションでもkeepにし、Beneath鉱石への経路を作らない。jigsaw等の `final_state` NBTに含まれるVanilla鉱石IDも、同じ表で置換する（Nether固有鉱石の除外を優先）。展示エンティティは、NeoForgeの `StructureProcessor#processEntity` overrideで処理する。対象は `item_frame`/`glow_item_frame` の `Item` と `armor_stand` の `ArmorItems`/`HandItems` で、旧版のWrought Iron系置換表（工具・武器・Armor・Shield・Bow/Crossbow/Trident→Javelin等）を移植する。置換先には不適合な `components`/`tag`/`Damage`/`damage` を除去してから書き込み、対象外エンティティとEnd/NONEディメンションでは何もしない。出力アイテムは `BuiltInRegistries.ITEM` で存在を確認し、存在しなければ元のアイテムを維持する。GameTestは、植物の全行（cactus 3段、tall_seagrassの上下）、対象外植物の不変、全鉱石とdeepslate鉱石の岩石別出力とフォールバック、Nether鉱石の維持、final_stateの置換、エンティティNBT置換とEndでの不変を検証する。AGENTS.mdも更新する。",
+      "scope": [
+        "src/main/java/net/claustra01/yungsbettertfc/world/conversion/ (PlantConversions, OreConversions, FinalStateRewriter, EquipmentConversions)",
+        "src/main/java/net/claustra01/yungsbettertfc/world/processor/TfcBlockReplacementProcessor.java",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "AGENTS.md",
+        "tests/acceptance.json"
+      ]
+    },
+    {
+      "id": "M05",
+      "features": [
+        "F-009"
+      ],
+      "dependsOn": [
+        "M01"
+      ],
+      "approach": "v0.4.3の `src/main/resources/data` にある90件のloot tableを移植し、`data/minecraft/loot_table/chests/nether_bridge.json` と `end_city_treasure.json` の2件を削除して88件にする（内訳: betterdungeons 8、betterfortresses 9、betteroceanmonuments 1、betterstrongholds 10、minecraft 5、yungsbettertfc共通55）。共通テーブルの金属tier（Ordinary/Dangerous/Lategame）は旧版どおり維持し、Red/Blue Steelを追加しない。`scripts/regenerate_loot_tables.py` を正式generatorとしてAGENTS.mdに明記したうえで更新し、Git管理する。このscriptは、元のMinecraft 1.21.1、YUNG各mod、TFCのJARパスを引数で受け取り（JAR自体は `.tmp/` に置く）、元JARのオリジナルloot tableだけを入力にする。既存の変換済みJSONは入力にしない。pool数・順序、rolls、bonus_rolls、entry順序、weight、quality、conditions、set_count、エンチャント関数を保持し、変換対象外のアイテムも残す。委譲対象の2件は除外リストで生成しない。出力は決定的にし（key順・改行を固定）、YUNG JARの更新時に元テーブルの差分を表示する比較モードを持たせる。旧版の出力とbyte比較またはJSON比較を行い、意図しない差分がないことを確認する。GameTestでは、88件すべてがreload後のloot table registryに存在すること、削除した2件に本mod由来の上書きがないこと（本mod resource packにファイルがないこと）、Overdimsのglobal loot modifierが登録されていて、Nether Bridge/End Cityの抽選でTFCアイテムへ変換されること、全テーブルの参照アイテムIDが登録済みであることを検証する。全JSONの構文解析とBOMなしUTF-8も確認する。",
+      "scope": [
+        "src/main/resources/data/betterdungeons/loot_table/",
+        "src/main/resources/data/betterfortresses/loot_table/",
+        "src/main/resources/data/betteroceanmonuments/loot_table/",
+        "src/main/resources/data/betterstrongholds/loot_table/",
+        "src/main/resources/data/minecraft/loot_table/chests/",
+        "src/main/resources/data/yungsbettertfc/loot_table/",
+        "scripts/regenerate_loot_tables.py",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "AGENTS.md",
+        "tests/acceptance.json",
+        ".gitignore"
+      ]
+    },
+    {
+      "id": "M06",
+      "features": [
+        "F-008",
+        "F-002"
+      ],
+      "dependsOn": [
+        "M01",
+        "M02",
+        "M03",
+        "M04",
+        "M05"
+      ],
+      "approach": "変換を実際のYUNG構造物生成につなぎ、ディメンション別の処理範囲を確定する。(1) StructureTemplateMixin。v0.4.3の注入方式（テンプレートIDの取得手段を含む）を1.21.1のコードで照合して移植する。対象namespaceは `betterstrongholds`/`betterdungeons`/`betteroceanmonuments`/`betterfortresses` だけとし、`placeInWorld` で `StructurePlaceSettings` の既存processorの末尾に本modのprocessorを一度だけ追加する（instance/type確認で重複を防ぐ）。`beneath:*` と `minecraft:end_city/*` は対象外で、テンプレートIDが不明な場合も追加しない。(2) Better Mineshaftsの `StructurePiece` の直接 `WorldGenLevel#setBlock`/placeBlock経路と、Better DungeonsのSpider Dungeon `StructurePiece` 生成に、M02〜M04の `BlockConversions` を適用するMixinを、1.21.1ソースで注入先を確認して実装する。Mixinはmod別packageに置いてM01のpluginでgateし、target指定は文字列（`@Pseudo` 等）にする。直接配置用には、`WorldGenLevel` から得た位置の地質・dimension・木材hintを使うcontextを作る。Chest Minecart/Barrel/Dungeon Chestの `minecraft:chests/abandoned_mineshaft` 参照は変更しない。(3) バイオームタグ12件。旧版のファイル名・内容を移植し、すべて `replace:false` にする（Better Dungeons Skeleton/Small/Spider/Zombie、Better Strongholds、Better Ocean Monumentsの `tfc_deep_ocean_biomes`（tfc:ocean/ocean_reefを含む）、Better Mineshafts Oak/Desert/Red Desert/Mesa/Ice/Spruce Snowy）。TFCのbiome IDはJARで確認する。`structure_set` や独自のFortress生成は追加せず、Better Fortressesは `yungsapi:yung_jigsaw` に任せる。(4) F-002の確定。dimension解決（Overworld=周辺地質、Nether=basalt/oxisol+Overdims木材、End/不明=NONE）がテンプレート経路・Mixin直接配置経路・entity処理のすべてで共通に使われていることを確認する。End Cityにはprocessorが注入されず、ブロック・BE・装備が不変で、OverdimsのEnd loot修飾も妨げないことを確認する。(5) Beneath関連のコード・ID・namespaceがないことを検索で確認する。GameTestは、注入対象/非対象の判定、processorが重複しないこと、タグ12件の読込と元biomeの維持、Mineshaft/Spider pieceの直接配置変換（mod導入時のみ）、End/Nether/Overworldの差を検証する。専用サーバーで任意YUNG mod 0/1/5種の構成を再度起動し、Mixin gateの安全性を確認する。AGENTS.mdも更新する。",
+      "scope": [
+        "src/main/java/net/claustra01/yungsbettertfc/mixin/StructureTemplateMixin.java",
+        "src/main/java/net/claustra01/yungsbettertfc/mixin/bettermineshafts/",
+        "src/main/java/net/claustra01/yungsbettertfc/mixin/betterdungeons/",
+        "src/main/java/net/claustra01/yungsbettertfc/mixin/YungsBetterTfcMixinPlugin.java",
+        "src/main/resources/yungsbettertfc.mixins.json",
+        "src/main/java/net/claustra01/yungsbettertfc/world/processor/",
+        "src/main/java/net/claustra01/yungsbettertfc/world/conversion/ (DimensionKind、直接配置用context)",
+        "src/main/resources/data/betterdungeons/tags/worldgen/biome/",
+        "src/main/resources/data/betterstrongholds/tags/worldgen/biome/",
+        "src/main/resources/data/betteroceanmonuments/tags/worldgen/biome/",
+        "src/main/resources/data/bettermineshafts/tags/worldgen/biome/",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "AGENTS.md",
+        "tests/acceptance.json"
+      ]
+    },
+    {
+      "id": "M07",
+      "features": [
+        "F-010"
+      ],
+      "dependsOn": [
+        "M06"
+      ],
+      "approach": "harnessのruntime（`.harness-config.json` のmctクライアント `yungstfc-a` と専用サーバー）を使ってクライアントE2Eを行う。TFC、Overdims、5種類のYUNG modを入れたワールドで、OverworldのMineshaft・Stronghold・Ocean MonumentとNetherのBetter Fortressを `/place structure` 等で生成する。石材・木材・ドア・階段・看板・Firepit・植物（cactus、tall_seagrass）・Chest・Barrel・Cauldronを撮影・検査し、missing texture、モデル崩れ、向きの不整合、浮いた上段植物がないこと、Vanilla維持対象が変わっていないことを確認する。続けてワールドを保存・終了・再起動し、同じ座標のブロックID、合法なstate、BarrelのLootTable、Cauldronのstateが保持され、BE読込でクラッシュしないことを確認する。Chest NBTの独自移行は行わない。不具合が見つかった場合は、M02〜M06の該当変換やproperty継承を最小限に修正し、対応するGameTestを追加する。新規テクスチャ・GUI・設定画面は追加しない。E2Eの手順と結果をtests/acceptance.jsonのe2eに記録し、実行できなかった確認は未確認範囲として報告する。",
+      "scope": [
+        "tests/acceptance.json",
+        "src/main/java/net/claustra01/yungsbettertfc/world/conversion/ (不具合修正時のみ)",
+        "src/main/java/net/claustra01/yungsbettertfc/gametest/",
+        "AGENTS.md"
+      ]
+    }
+  ]
+}
