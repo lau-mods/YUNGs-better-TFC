@@ -30,13 +30,45 @@
 
 ## Current implementation
 
-Milestone M01 provides only the bootstrap and dependency boundary:
+Milestone M02 provides the bootstrap, dependency boundary, and the stone, sandstone, soil, and structural hardening conversion core:
 
 - Distribution version `1.0.0` with `@Mod("yungsbettertfc")`.
 - Required and optional dependencies exactly as listed above.
 - No Beneath dependency or runtime integration.
 - `yungsbettertfc.mixins.json` uses `YungsBetterTfcMixinPlugin`. Mixins below `mixin.bettermineshafts`, `mixin.betterdungeons`, `mixin.betterstrongholds`, `mixin.betteroceanmonuments`, and `mixin.betterfortresses` load only when their matching mod is present.
-- No structure conversion behavior is implemented before its later milestone.
+- `yungsbettertfc:tfc_block_replacement` is a registered unit-codec structure processor. It converts only `minecraft:` input blocks in the Overworld and Nether and performs no conversion in the End or an unknown/custom dimension.
+- Overworld geology scans downward from the placement origin for at most 64 blocks. It detects `tfc:rock/raw/<rock>` and TFC soil-family blocks, caches the combined result in a bounded thread-safe placement-origin cache, and defaults to `granite` and `mollisol`. Nether conversion always uses `basalt` and `oxisol`.
+- Conversion output is accepted only when the block registry contains it, and compatible state properties are copied by property name and value. Missing output IDs preserve the original block.
+- Hardening uses only the block directly below each result. The processor indexes the processed template list in `finalizeProcessing`; positions outside that list use the existing level state.
+
+## M02 conversion tables
+
+The rock placeholder is detected geology in the Overworld and `basalt` in the Nether.
+
+| Vanilla input | TFC output family |
+| --- | --- |
+| `stone`, `andesite`, `granite`, `diorite`, `tuff`, including existing stairs/slabs/walls | `rock/raw/<rock>` and matching shapes |
+| `polished_andesite`, `polished_granite`, `polished_diorite`, `polished_tuff`, including stairs/slabs | `rock/smooth/<rock>` and matching shapes |
+| `cobblestone`, `mossy_cobblestone`, including stairs/slabs/walls | `rock/cobble/<rock>` and `rock/mossy_cobble/<rock>` shapes |
+| `stone_bricks`, `tuff_bricks`, including stairs/slabs/walls | `rock/bricks/<rock>` and matching shapes |
+| `mossy_stone_bricks`, including stairs/slabs/walls | `rock/mossy_bricks/<rock>` and matching shapes |
+| `cracked_stone_bricks` | `rock/cracked_bricks/<rock>` |
+| `chiseled_stone_bricks`, `chiseled_tuff`, `chiseled_tuff_bricks` | `rock/chiseled/<rock>` |
+| `smooth_stone`, `smooth_stone_slab` | `rock/smooth/<rock>` and slab |
+| `gravel`, `stone_button`, `stone_pressure_plate` | `rock/gravel`, `rock/button`, `rock/pressure_plate` for `<rock>` |
+
+`sandstone` and red sandstone use the matching yellow/red `raw_sandstone` family. Cut and chiseled variants use `cut_sandstone`; smooth variants use `smooth_sandstone`; registered stairs, slabs, and walls retain their shape. `sand` and `red_sand` become yellow and red TFC sand.
+
+| Vanilla soil | TFC soil output |
+| --- | --- |
+| `dirt` | `dirt/<soil>` |
+| `coarse_dirt` | `coarse_dirt/<soil>` |
+| `grass_block` | `grass/<soil>` |
+| `rooted_dirt` | `rooted_dirt/<soil>` |
+| `farmland` | `farmland/<soil>` |
+| `dirt_path` | `grass_path/<soil>` |
+
+Deepslate and Blackstone general building families remain unchanged. The explicit Nether keep list is Blackstone, Polished Blackstone, Basalt, Polished Basalt, Soul Sand, Soul Soil, Nether Gold Ore, Nether Quartz Ore, and Ancient Debris. Raw/cobble/mossy-cobble full-block conversion results become `tfc:rock/hardened/<rock>` only when the block directly below is air. Nether Netherrack similarly becomes `tfcoverdims:hardened_netherrack`; supported blocks and all stairs, slabs, and walls do not harden. No Overdims tags are changed.
 
 ## Shared mcmods development rules
 
@@ -85,3 +117,8 @@ Child repositories can be checked out independently, so these rules remain in th
 - The GameTest namespace is `yungsbettertfc`. Bootstrap tests use `data/yungsbettertfc/structure/empty.nbt` and write JUnit XML through the `yungsbettertfc.gametest.report` system property. The Gradle run writes `build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-<configuration>.xml`.
 - Run `./gradlew build` and `./gradlew runGameTestServer` for the five optional YUNG mods. Run `./gradlew -PoptionalYungMods=none runGameTestServer` and `./gradlew -PoptionalYungMods=betterdungeons runGameTestServer` for zero and one optional mod. Each run checks actual loaded mod IDs and the corresponding Mixin package gate, and places one structure for each loaded optional mod.
 - Run `./gradlew -PwithoutTfcOverdims=true -PoptionalYungMods=none runGameTestServer` to verify that NeoForge refuses startup and reports `tfcoverdims` as a missing required dependency of `yungsbettertfc` in `run/logs/latest.log`. Check the FML message because the development launcher can return success after the loading error. This negative check cannot be an in-game GameTest because dependency validation stops loading first; its expected result is recorded beside the GameTest entries in `tests/acceptance.json`.
+
+## M02 verification
+
+- `ConversionGameTests` covers every rock, sandstone, and soil table row in Overworld/Nether contexts, verifies all mapped categories remain unchanged in an End/NONE context, and checks state inheritance and missing-registry fallback.
+- Its structure-pipeline checks detect TFC raw rock and soil below a placement origin and exercise template-indexed hardening for unsupported and supported full blocks and unsupported stairs, slabs, and walls.

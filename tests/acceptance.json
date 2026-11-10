@@ -17,6 +17,54 @@
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",
       "name": "optionalyungmixingate"
+    },
+    {
+      "acId": "AC-F003-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "additionalrockfamiliesandproperties"
+    },
+    {
+      "acId": "AC-F003-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "legacyrockfamiliesandtemplategeology"
+    },
+    {
+      "acId": "AC-F003-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "sandstoneandsoilfamilies"
+    },
+    {
+      "acId": "AC-F003-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "deepslateblackstoneandendstayunchanged"
+    },
+    {
+      "acId": "AC-F004-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "netherrockfamiliesusebasalt"
+    },
+    {
+      "acId": "AC-F004-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethersoilsuseoxisolandsandkeepscolor"
+    },
+    {
+      "acId": "AC-F004-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "hardeningusesonlyblockdirectlybelow"
+    },
+    {
+      "acId": "AC-F004-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethernativeblocksstayunchanged"
     }
   ],
   "e2e": [],
