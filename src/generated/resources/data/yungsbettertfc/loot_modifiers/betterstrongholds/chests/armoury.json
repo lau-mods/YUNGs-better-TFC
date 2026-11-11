@@ -1,0 +1,72 @@
+{
+  "type": "yungsbettertfc:structure_loot_replacement",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "betterstrongholds:chests/armoury"
+    }
+  ],
+  "enchantments": {
+    "minecraft:bow": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:diamond_boots": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:diamond_chestplate": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:diamond_helmet": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:diamond_leggings": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:diamond_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:iron_boots": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:iron_chestplate": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:iron_helmet": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:iron_leggings": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:iron_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:wooden_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 10.0,
+      "options": "#minecraft:on_random_loot"
+    }
+  },
+  "profile": "dangerous"
+}

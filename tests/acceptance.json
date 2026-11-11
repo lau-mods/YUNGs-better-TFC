@@ -211,6 +211,12 @@
       "name": "yungloottablesload"
     },
     {
+      "acId": "AC-F009-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "structurelootmodifiersreplacerolleditems"
+    },
+    {
       "acId": "AC-F009-002",
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",
@@ -239,6 +245,12 @@
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",
       "name": "convertedstatesandblockentitiesreload"
+    },
+    {
+      "acId": "AC-F008-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "oceanmonumentwaterbecomessaltwater"
     }
   ],
   "e2e": [
@@ -336,19 +348,9 @@
   ],
   "scriptChecks": [
     {
-      "acId": "AC-F009-001",
-      "command": "python3 scripts/regenerate_loot_tables.py --minecraft-jar .tmp/m05-jars/minecraft-1.21.1.jar --betterdungeons-jar .tmp/m05-jars/betterdungeons.jar --betterfortresses-jar .tmp/m05-jars/betterfortresses.jar --betteroceanmonuments-jar .tmp/m05-jars/betteroceanmonuments.jar --betterstrongholds-jar .tmp/m05-jars/betterstrongholds.jar --tfc-jar .tmp/m05-jars/tfc.jar --check",
-      "expected": "Exit 0; all 28 YUNG source-derived tables match tracked bytes and retain the original pools, rolls, entries, functions and replacement tiers."
-    },
-    {
       "acId": "AC-F009-004",
-      "command": "python3 scripts/regenerate_loot_tables.py --minecraft-jar .tmp/m05-jars/minecraft-1.21.1.jar --betterdungeons-jar .tmp/m05-jars/betterdungeons.jar --betterfortresses-jar .tmp/m05-jars/betterfortresses.jar --betteroceanmonuments-jar .tmp/m05-jars/betteroceanmonuments.jar --betterstrongholds-jar .tmp/m05-jars/betterstrongholds.jar --tfc-jar .tmp/m05-jars/tfc.jar --check",
-      "expected": "Exit 0; exactly 88 loot tables and three tags match tracked bytes; delegated Nether Bridge and End City outputs are absent."
-    },
-    {
-      "acId": "AC-F009-004",
-      "commandTemplate": "python3 scripts/regenerate_loot_tables.py --minecraft-jar .tmp/m05-jars/minecraft-1.21.1.jar --betterdungeons-jar .tmp/m05-jars/betterdungeons.jar --betterfortresses-jar .tmp/m05-jars/betterfortresses.jar --betteroceanmonuments-jar .tmp/m05-jars/betteroceanmonuments.jar --betterstrongholds-jar .tmp/m05-jars/betterstrongholds.jar --tfc-jar .tmp/m05-jars/tfc.jar --compare-source betterdungeons=.tmp/m05-jars/betterdungeons-previous.jar --compare-only",
-      "expected": "Print a normalized unified diff for changed original Better Dungeons loot tables when the previous JAR differs; do not write tracked resources."
+      "command": "./gradlew runData && git diff --exit-code -- src/generated/resources && test -z \"$(git status --porcelain -- src/generated/resources)\"",
+      "expected": "Exit 0; the 33 structure loot modifiers, the NeoForge global loot modifier list, and the fertilizer item tag regenerate without changes; no loot table and no Nether Bridge or End City modifier is generated."
     }
   ]
 }

@@ -1,5 +1,6 @@
 package net.claustra01.yungsbettertfc;
 
+import net.claustra01.yungsbettertfc.loot.StructureLootModifier;
 import net.claustra01.yungsbettertfc.world.processor.ModProcessors;
 import net.claustra01.yungsbettertfc.world.conversion.DirectPlacementContext;
 import net.claustra01.yungsbettertfc.world.conversion.GeologyDetector;
@@ -13,6 +14,7 @@ public final class YungsBetterTfc {
 
     public YungsBetterTfc(IEventBus modEventBus) {
         ModProcessors.register(modEventBus);
+        StructureLootModifier.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(DirectPlacementContext::clearCache);
         NeoForge.EVENT_BUS.addListener(GeologyDetector::clearCache);
     }

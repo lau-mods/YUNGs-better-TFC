@@ -1,0 +1,16 @@
+{
+  "type": "yungsbettertfc:structure_loot_replacement",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "betterdungeons:skeleton_dungeon/chests/common"
+    }
+  ],
+  "enchantments": {
+    "minecraft:bow": {
+      "function": "minecraft:enchant_randomly",
+      "options": "#minecraft:on_random_loot"
+    }
+  },
+  "profile": "ordinary"
+}

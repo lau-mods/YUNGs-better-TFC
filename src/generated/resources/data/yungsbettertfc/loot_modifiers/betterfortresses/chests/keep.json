@@ -1,0 +1,87 @@
+{
+  "type": "yungsbettertfc:structure_loot_replacement",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "betterfortresses:chests/keep"
+    }
+  ],
+  "enchantments": {
+    "minecraft:chainmail_boots": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:chainmail_chestplate": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:chainmail_helmet": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:chainmail_leggings": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:golden_boots": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:golden_chestplate": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:golden_helmet": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:golden_leggings": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:golden_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:iron_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 20.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:leather_boots": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 10.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:leather_chestplate": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 10.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:leather_helmet": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 10.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:leather_leggings": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 10.0,
+      "options": "#minecraft:on_random_loot"
+    },
+    "minecraft:stone_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 10.0,
+      "options": "#minecraft:on_random_loot"
+    }
+  },
+  "profile": "dangerous"
+}
