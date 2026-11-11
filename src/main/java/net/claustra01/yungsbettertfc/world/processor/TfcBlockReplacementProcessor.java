@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
+import net.claustra01.yungsbettertfc.world.conversion.RegistryLookup;
+import net.minecraft.resources.ResourceLocation;
 
 import net.claustra01.yungsbettertfc.world.conversion.BlockConversions;
 import net.claustra01.yungsbettertfc.world.conversion.ConversionContext;
@@ -25,10 +28,16 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public final class TfcBlockReplacementProcessor extends StructureProcessor {
-    public static final TfcBlockReplacementProcessor INSTANCE = new TfcBlockReplacementProcessor();
-    public static final MapCodec<TfcBlockReplacementProcessor> CODEC = MapCodec.unit(INSTANCE);
+    public static final TfcBlockReplacementProcessor INSTANCE = new TfcBlockReplacementProcessor(false);
+    public static final TfcBlockReplacementProcessor OCEAN_MONUMENT = new TfcBlockReplacementProcessor(true);
+    public static final MapCodec<TfcBlockReplacementProcessor> CODEC = Codec.BOOL
+            .optionalFieldOf("salt_water", false)
+            .xmap(saltWater -> saltWater ? OCEAN_MONUMENT : INSTANCE, processor -> processor.saltWater);
+    private final boolean saltWater;
 
-    private TfcBlockReplacementProcessor() {}
+    private TfcBlockReplacementProcessor(boolean saltWater) {
+        this.saltWater = saltWater;
+    }
 
     @Override
     protected StructureProcessorType<?> getType() {
@@ -75,6 +84,9 @@ public final class TfcBlockReplacementProcessor extends StructureProcessor {
                     : level.getBlockState(below).is(Blocks.CACTUS);
             BlockState converted = BlockConversions.convert(
                     info.state(), context.withPlacementBelow(belowIsAir, cactusBelow));
+            if (saltWater && dimension == DimensionKind.OVERWORLD && converted.is(Blocks.WATER)) {
+                converted = RegistryLookup.stateOrOriginal(ResourceLocation.parse("tfc:fluid/salt_water"), converted);
+            }
             boolean clearNbt = converted.getBlock() instanceof FirepitBlock
                     && info.state().getBlock() != converted.getBlock();
             result.add(new StructureTemplate.StructureBlockInfo(

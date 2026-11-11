@@ -229,8 +229,8 @@ public final class StructureIntegrationGameTests {
                 "com.yungnickyoung.minecraft.betterdungeons.world.structure.spider_dungeon.piece.SpiderDungeonPiece");
         IModFile modFile = ModList.get().getModFileById(YungsBetterTfc.MOD_ID).getFile();
         helper.assertTrue(Files.exists(modFile.findResource(
-                "data", "minecraft", "loot_table", "chests", "abandoned_mineshaft.json")),
-                "The abandoned mineshaft loot override must remain present");
+                "data", YungsBetterTfc.MOD_ID, "loot_modifiers", "minecraft", "chests", "abandoned_mineshaft.json")),
+                "The abandoned mineshaft loot modifier must remain present");
         helper.succeed();
     }
 
@@ -392,6 +392,42 @@ public final class StructureIntegrationGameTests {
                     "This mod must not add a fortress structure or structure_set definition");
         } catch (IOException exception) {
             throw new IllegalStateException("Unable to inspect bundled worldgen resources", exception);
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty", batch = BATCH)
+    public static void oceanMonumentWaterBecomesSaltWater(GameTestHelper helper) throws ReflectiveOperationException {
+        ServerLevel level = helper.getLevel();
+        BlockPos origin = helper.absolutePos(new BlockPos(0, 8, 0));
+        var water = Blocks.WATER.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL, 3);
+        var blocks = List.of(info(BlockPos.ZERO, water),
+                info(new BlockPos(1, 0, 0), Blocks.KELP.defaultBlockState()));
+        var settings = injectedSettings(level, "betteroceanmonuments:test", origin);
+        var converted = process(level, origin, settings, blocks);
+        assertBlock(helper, converted.get(0).state(), "tfc:fluid/salt_water");
+        helper.assertTrue(converted.get(0).state().getValue(net.minecraft.world.level.block.LiquidBlock.LEVEL) == 3,
+                "Salt water must retain the liquid level");
+        assertBlock(helper, converted.get(1).state(), "tfc:fluid/salt_water");
+        var ordinary = injectedSettings(level, "betterstrongholds:test", origin);
+        assertBlock(helper, process(level, origin, ordinary, blocks).get(0).state(), "minecraft:water");
+        ServerLevel end = level.getServer().getLevel(Level.END);
+        assertBlock(helper, process(end, origin, settings, blocks).get(0).state(), "minecraft:water");
+        if (ModList.get().isLoaded("betteroceanmonuments")) {
+            // Exercise the actual dependency processor that floods air below sea level.
+            var air = (net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor)
+                    Class.forName("com.yungnickyoung.minecraft.betteroceanmonuments.world.processor.AirProcessor")
+                            .getField("INSTANCE").get(null);
+            var flooded = new StructurePlaceSettings().addProcessor(air);
+            identifiedTemplate("betteroceanmonuments:test").placeInWorld(
+                    level, origin, origin, flooded, level.getRandom(), 2);
+            BlockPos belowSea = new BlockPos(origin.getX(), level.getSeaLevel() - 1, origin.getZ());
+            assertBlock(helper, process(level, belowSea, flooded,
+                    List.of(info(BlockPos.ZERO, Blocks.AIR.defaultBlockState()))).get(0).state(), "tfc:fluid/salt_water");
+            BlockPos aboveSea = belowSea.above(2);
+            assertBlock(helper, process(level, aboveSea, flooded,
+                    List.of(info(BlockPos.ZERO, Blocks.AIR.defaultBlockState()))).get(0).state(), "minecraft:air");
         }
         helper.succeed();
     }

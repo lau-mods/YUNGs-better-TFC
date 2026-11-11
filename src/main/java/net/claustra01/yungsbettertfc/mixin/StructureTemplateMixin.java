@@ -51,7 +51,9 @@ public abstract class StructureTemplateMixin implements StructureTemplateIdAcces
             return;
         }
         if (settings.getProcessors().stream().noneMatch(TfcBlockReplacementProcessor.class::isInstance)) {
-            settings.addProcessor(TfcBlockReplacementProcessor.INSTANCE);
+            settings.addProcessor(yungsbettertfc$templateId.getNamespace().equals("betteroceanmonuments")
+                    ? TfcBlockReplacementProcessor.OCEAN_MONUMENT
+                    : TfcBlockReplacementProcessor.INSTANCE);
         }
     }
 }
