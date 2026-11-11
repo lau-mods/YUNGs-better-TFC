@@ -30,7 +30,7 @@
 
 ## Current implementation
 
-Milestone M07 provides the bootstrap, dependency boundary, conversion core, maintained structure loot tables, YUNG structure integration, and rendering and reload regression coverage:
+Milestone M07 provides the bootstrap, dependency boundary, conversion core, structure loot replacement, YUNG structure integration, and rendering and reload regression coverage:
 
 - Distribution version `1.0.0` with `@Mod("yungsbettertfc")`.
 - Required and optional dependencies exactly as listed above.
@@ -48,9 +48,9 @@ Milestone M07 provides the bootstrap, dependency boundary, conversion core, main
 - Kelp becomes water; seagrass and the lower half of tall seagrass become TFC eel grass; the upper tall-seagrass half becomes water. Sea pickles, vines, cactus bases, and dead bushes use their registered TFC equivalents. Additional cactus blocks become air based on the processed template position index. Registered `tfc:plant/potted/*` outputs are used, while other plants remain Vanilla.
 - Vanilla Overworld and Deepslate ores use the maintained TFC ore priority table and the detected rock, with a Granite registry fallback. Nether Gold Ore, Nether Quartz Ore, and Ancient Debris always remain Vanilla. The same rules rewrite parseable Vanilla ore states in `final_state` NBT, copying only compatible properties and retaining trailing NBT.
 - Item frames, glow item frames, and armor stands convert supported Vanilla equipment to registered TFC Wrought Iron equipment in the Overworld and Nether. Incompatible item component, tag, and damage data is removed after replacement. Display entities are unchanged in the End or an unknown dimension.
-- The mod provides 88 loot tables: Better Dungeons 8, Better Fortresses 9, Better Ocean Monuments 1, Better Strongholds 10, Vanilla-named overrides 5, and shared `yungsbettertfc` tables 55. The old Nether Bridge and End City Treasure overrides are absent so TFC Overdims handles those tables with its global loot modifiers.
-- Shared loot retains the Ordinary, Dangerous, and Lategame tiers. General ingot candidates are Copper/Bronze/Bismuth Bronze/Black Bronze/Wrought Iron, Wrought Iron/Steel, and Steel/Black Steel respectively; Red and Blue Steel are not added.
-- `scripts/regenerate_loot_tables.py` is the maintained loot-table and item-tag generator. It takes pristine Minecraft, YUNG, and TFC 1.21.1 JAR paths, never uses converted JSON as generation input, omits delegated tables, writes deterministic JSON, checks tracked output byte for byte, and compares normalized source tables between dependency JAR versions. The three generated loot item tags retain the v0.4.3 TFC produce, seed, and fertilizer members.
+- The mod overrides no loot table. 33 `yungsbettertfc:structure_loot_replacement` global loot modifiers target Better Dungeons 8, Better Fortresses 9, Better Ocean Monuments 1, Better Strongholds 10, and Vanilla `abandoned_mineshaft`, `simple_dungeon`, and `stronghold_*` 5 tables, and `StructureLootRules` replaces only the stacks those unmodified tables rolled. Nether Bridge and End City Treasure have no modifier from this mod so TFC Overdims handles those tables with its global loot modifiers.
+- Loot replacement retains the Ordinary, Dangerous, and Lategame tiers. General ingot candidates are Copper/Bronze/Bismuth Bronze/Black Bronze/Wrought Iron, Wrought Iron/Steel, and Steel/Black Steel respectively; Red and Blue Steel are not added. A rolled replacement equal to the source item, such as a bow, crossbow, or charcoal, keeps the original stack. Vanilla wheat becomes `tfc:food/wheat`.
+- `./gradlew runData` runs `DataGenerators`, which reads the pristine source tables from their own mod files and writes the modifiers, the NeoForge global loot modifier list, and the `loot/fertilizers` item tag to `src/generated/resources`.
 - `StructureTemplateManagerMixin` records template IDs for both `get` (including `/place template` and cache hits) and `getOrCreate`, and `StructureTemplateMixin` appends the replacement processor once after existing processors for `betterstrongholds`, `betterdungeons`, `betteroceanmonuments`, and `betterfortresses` templates. Unknown templates, `beneath:*`, and `minecraft:end_city/*` are not targeted.
 - Better Mineshafts and Better Dungeons Spider Dungeon pieces are marked by optional-mod-gated, string-targeted Mixins. Their inherited `StructurePiece` block and chest placement uses the common conversion path; Better Mineshafts' direct leg, pillar, and column `WorldGenLevel#setBlock` calls do as well. Direct placement resolves the dimension from `WorldGenLevel`, detects Overworld geology, uses Nether Basalt/Oxisol, remembers a bounded placement-origin wood hint, and does nothing in the End or an unknown dimension.
 - Twelve `replace:false` YUNG biome-tag additions are maintained: four Better Dungeons tags, one Better Strongholds tag, one Better Ocean Monuments tag, and six Better Mineshafts tags. The Ocean Monument addition includes `tfc:ocean` and `tfc:ocean_reef`. No structure or structure-set definition is provided, and Better Fortresses remains generated by its own YUNG jigsaw implementation.
@@ -158,7 +158,6 @@ Child repositories can be checked out independently, so these rules remain in th
 
 - Put dependency JARs, extracted files, comparison images, and temporary analysis or verification scripts under the ignored `.tmp/` directory.
 - Commit only scripts required by a normal clone, build, or CI workflow, unless `AGENTS.md` explicitly identifies another script as a maintained generator.
-- `scripts/regenerate_loot_tables.py` is a maintained generator and must remain tracked with the loot tables it produces.
 - Keep generated resources and their specification reproducible; do not make a temporary helper the only source of behavior.
 - Save JSON as UTF-8 without a BOM and use the target Minecraft version's pack layout.
 - Do not include `.gradle/`, `build/`, `run/`, `runs/`, IDE metadata, dependency JARs, or extracted output in changes.
@@ -197,9 +196,9 @@ Child repositories can be checked out independently, so these rules remain in th
 
 ## M05 verification
 
-- `M05GameTests` verifies that all 28 YUNG overrides and all 88 maintained tables load after resource reload, the six namespace counts are exact, every loot-table JSON file is UTF-8 without a BOM and parses, every direct item reference is registered, and every item-tag loot entry resolves to a non-empty tag.
-- The tests inspect this mod's own resource pack to verify that Nether Bridge and End City Treasure are absent, verify the Overdims global-loot-modifier codec and modifier resources, and execute both Vanilla tables repeatedly to observe TFC replacement output.
-- Run `scripts/regenerate_loot_tables.py --check` with pristine dependency JARs stored below `.tmp/` to compare all generated bytes with the tracked v0.4.3-derived output. Use `--compare-source NAMESPACE=OLD_JAR --compare-only` to display normalized source-table changes when a YUNG JAR changes. The script checks the three generated item tags and confirms that the two delegated table files remain absent.
+- `LootTableGameTests` verifies that the 33 target tables load from their own mods, this mod ships no loot table, exactly the 33 modifiers are listed and decode with their profile, every modifier and tag JSON file is UTF-8 without a BOM, and the fertilizer tag resolves. It rolls every loaded target table and checks the replacement rules, including kept self-replacements.
+- The tests verify that Nether Bridge and End City Treasure have no modifier from this mod, verify the Overdims global-loot-modifier codec and modifier resources, and execute both Vanilla tables repeatedly to observe TFC replacement output.
+- Run `./gradlew runData` and confirm that `src/generated/resources` has no diff.
 
 ## M06 verification
 

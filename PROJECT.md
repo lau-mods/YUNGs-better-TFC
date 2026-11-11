@@ -419,7 +419,7 @@ YUNG対象テンプレートでは既存プロセッサの後に本MODのプロ�
 
 #### Description
 
-旧版の戦利品割り当て、プール数、rolls、bonus_rolls、entryの重み・条件・個数・品質・関数、装備カテゴリと金属tierを、指定した委譲対象以外で維持する。旧版90ファイルのうち `minecraft:chests/nether_bridge` と `minecraft:chests/end_city_treasure` の上書き2件を削除し、OverdimsのNeoForgeグローバル戦利品修飾子へ委ねる。残る28件のYUNGテーブル、5件のVanilla名義テーブル、55件の共通テーブルは維持する。従来の再生成スクリプトも委譲対象を再作成しないよう更新する。
+元のloot tableを上書きせず、プール数、rolls、bonus_rolls、entryの重み・条件・個数・品質・関数による抽選結果を維持する。旧版の対象28件のYUNGテーブルと5件のVanilla名義テーブルには、NeoForgeグローバル戦利品修飾子で抽選済みアイテムだけを置換し、装備カテゴリと金属tierを維持する。旧版90ファイルの上書きと55件の共通テーブルは提供しない。`minecraft:chests/nether_bridge` と `minecraft:chests/end_city_treasure` には本MODの修飾子を置かず、OverdimsのNeoForgeグローバル戦利品修飾子へ委ねる。
 
 #### Acceptance Criteria
 
@@ -429,10 +429,10 @@ Preconditions:
 指定した旧版と対応するYUNG依存MODのMinecraft 1.21.1向け戦利品テーブルが参照できる。
 
 Action:
-Better Dungeons8件、Better Fortresses9件、Better Strongholds10件、Better Ocean Monuments1件のテーブルを再生成または比較する。
+Better Dungeons8件、Better Fortresses9件、Better Strongholds10件、Better Ocean Monuments1件のテーブルを抽選する。
 
 Expected Result:
-対象28件で元テーブルのプール・抽選回数・エントリー重み・条件・個数の構造を維持し、旧版のTFC置換カテゴリ・tierを維持する。Overdimsへ委譲する2件以外の既存戦利品を意図せず変更しない。
+対象28件で元テーブルのプール・抽選回数・エントリー重み・条件・個数による結果を維持し、旧版のTFC置換カテゴリ・tierで抽選済みアイテムを置換する。Overdimsへ委譲する2件以外の既存戦利品を意図せず変更しない。
 
 ##### AC-F009-002: Vanilla名義の上書きを整理する
 
@@ -443,7 +443,7 @@ Action:
 v1.0のデータを読み込み、同名上書きを列挙する。
 
 Expected Result:
-Nether BridgeとEnd CityのJSON上書きは存在しない。`abandoned_mineshaft`、`simple_dungeon`、`stronghold_corridor`、`stronghold_crossing`、`stronghold_library` の5件と共通55件は残る。合計88件となる。
+本MODはloot tableを上書きしない。`abandoned_mineshaft`、`simple_dungeon`、`stronghold_corridor`、`stronghold_crossing`、`stronghold_library` の5件とYUNG28件に本MODの修飾子が1件ずつあり、合計33件となる。Nether BridgeとEnd Cityには本MODの修飾子がない。
 
 ##### AC-F009-003: Overdimsの戦利品処理と重複しない
 
@@ -456,16 +456,16 @@ Action:
 Expected Result:
 本MODの古い2件のJSON上書きが介入せず、Overdimsの対応する修飾子が既定どおりに適用される。Overdimsの処理結果が旧版の抽選結果と完全一致することは要求しない。
 
-##### AC-F009-004: 再生成スクリプトが委譲対象を復活させない
+##### AC-F009-004: データ生成が委譲対象を復活させない
 
 Preconditions:
 Minecraft 1.21.1と各YUNG MODの元JAR、TFCのJARを用意する。
 
 Action:
-戦利品再生成スクリプトを実行する。
+`./gradlew runData` を実行する。
 
 Expected Result:
-元JARのオリジナルloot tableから変換が生成され、既存の変換済みJSONを再生成の入力にしない。2件の削除済み上書きを再作成しない。YUNG依存JARのバージョン更新時に元の重み・条件等の変更を比較できる。
+各元MODのオリジナルloot tableからエンチャント関数を読み取って修飾子が生成され、追跡中の生成物と差分がない。loot tableと委譲した2件の修飾子を生成しない。
 
 ### F-010: 描画と回帰動作
 
@@ -694,23 +694,23 @@ Crimson/Warped Fungus、Nylium、Roots、Vinesなど、木材ではないNether�
 
 ### 戦利品の責務分担
 
-旧版の`src/main/resources/data`には戦利品テーブルJSONが計90件ある。v1.0では以下の内訳とする。
+旧版の`src/main/resources/data`には戦利品テーブルJSONが計90件ある。v1.0ではこれらを上書きせず、以下の対象に修飾子を置く。
 
-| 名前空間 | v1.0のファイル数 | 取り扱い |
+| 名前空間 | v1.0の修飾子数 | 取り扱い |
 | --- | ---: | --- |
 | `betterdungeons` | 8 | 旧版の割り当てを維持 |
 | `betterfortresses` | 9 | 旧版の割り当てを維持 |
 | `betteroceanmonuments` | 1 | 旧版と同じ、依存元の内容を維持 |
 | `betterstrongholds` | 10 | 旧版の割り当てを維持 |
-| `minecraft` | 5 | Mineshaft、Simple Dungeon、Strongholdの3件を維持 |
-| `yungsbettertfc` | 55 | 旧版の共通テーブルを維持 |
-| **合計** | **88** | 旧版から2件削除 |
+| `minecraft` | 5 | Mineshaft、Simple Dungeon、Strongholdの3件の置換を維持 |
+| `yungsbettertfc` | 0 | 共通テーブルを廃止し、修飾子内で抽選 |
+| **合計** | **33** | 委譲2件と共通55件を除く |
 
 削除する2件は`data/minecraft/loot_table/chests/nether_bridge.json`と`data/minecraft/loot_table/chests/end_city_treasure.json`。これらについて本MODの独自上書きを行わず、Overdims `v0.1.4` が提供するNeoForgeグローバル戦利品修飾子に委譲する。Overdimsは元のloot table JSONを置き換えず、抽選後のアイテムを変換する。委譲対象の抽選結果が旧版と完全一致することは要求しない。
 
 共有テーブルの金属tierは旧版どおり、Ordinaryの一般IngotsがCopper/Bronze/Bismuth Bronze/Black Bronze/Wrought Iron、DangerousがWrought Iron/Steel、LategameがSteel/Black Steel。完成装備は既存のOrdinary/Dangerous/Lategameの制約に従う。Black SteelはLategameの一般Ingot候補以外へ拡張せず、Red/Blue Steelを一般戦利品へ追加しない。
 
-旧版の`scripts/regenerate_loot_tables.py`は元のMinecraft/YUNGのJARから変換後JSONを再生成する。元loot tableのpool数・順序、rolls、bonus_rolls、entry順序、weight、quality、conditions、set_count、エンチャント関数等の既存特性を維持し、変換対象外アイテムを保持する。スクリプトをv1.0に更新し、委譲した2件を再生成しない。対応するYUNG 1.21.1の後続リリースでソースloot tableが変更された場合、元JARを更新して差分を比較する。
+旧版の`scripts/regenerate_loot_tables.py`は廃止し、`./gradlew runData`で修飾子を生成する。元loot tableを上書きしないため、pool数・順序、rolls、bonus_rolls、entry順序、weight、quality、conditions、set_count、エンチャント関数等の既存特性は元MODのものが維持され、変換対象外アイテムは保持される。置換先が元アイテムと同一の場合は元スタックを保持する。Vanilla wheatは`tfc:food/wheat`に置換する。委譲した2件の修飾子は生成しない。
 
 ### 共通の検証要件
 

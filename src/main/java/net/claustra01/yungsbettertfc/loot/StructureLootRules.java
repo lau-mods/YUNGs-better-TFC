@@ -67,7 +67,7 @@ public final class StructureLootRules {
         RandomSource random = context.getRandom();
         Target target = fixed.containsKey(stack.getItem())
                 ? new Target(fixed.get(stack.getItem()), true) : target(id, profile, random);
-        if (target == null || target.item() == null || target.item() == Items.AIR) {
+        if (target == null || target.item() == null || target.item() == Items.AIR || target.item() == stack.getItem()) {
             return List.of(stack);
         }
         DataComponentPatch components = stack.getComponentsPatch().forget(
@@ -162,6 +162,7 @@ public final class StructureLootRules {
         result.put("baked_potato", "tfc:food/baked_potato");
         result.put("beetroot", "tfc:food/beet");
         result.put("bread", "tfc:food/wheat_bread");
+        result.put("wheat", "tfc:food/wheat");
         result.put("dried_kelp", "tfc:food/dried_kelp");
         result.put("wheat_seeds", "tfc:seeds/wheat");
         result.put("beetroot_seeds", "tfc:seeds/beet");

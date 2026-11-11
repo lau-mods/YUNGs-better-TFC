@@ -180,12 +180,13 @@ public final class LootTableGameTests {
             }
         }
         helper.assertTrue(finishedEnchanted > 0, "Finished equipment must re-run the source enchantment function");
-        Map<Item, String> fixed = Map.of(
-                Items.COOKED_BEEF, "tfc:food/cooked_beef", Items.PORKCHOP, "tfc:food/pork",
-                Items.BREAD, "tfc:food/wheat_bread", Items.BEETROOT, "tfc:food/beet",
-                Items.WHEAT_SEEDS, "tfc:seeds/wheat", Items.MELON_SEEDS, "tfc:seeds/melon",
-                Items.RAW_GOLD, "tfc:ore/normal_native_gold", Items.GOLD_NUGGET, "tfc:ore/small_native_gold",
-                Items.CHAIN, "tfc:metal/chain/wrought_iron", Items.TORCH, "tfc:torch");
+        Map<Item, String> fixed = Map.ofEntries(
+                Map.entry(Items.COOKED_BEEF, "tfc:food/cooked_beef"), Map.entry(Items.PORKCHOP, "tfc:food/pork"),
+                Map.entry(Items.BREAD, "tfc:food/wheat_bread"), Map.entry(Items.BEETROOT, "tfc:food/beet"),
+                Map.entry(Items.WHEAT, "tfc:food/wheat"),
+                Map.entry(Items.WHEAT_SEEDS, "tfc:seeds/wheat"), Map.entry(Items.MELON_SEEDS, "tfc:seeds/melon"),
+                Map.entry(Items.RAW_GOLD, "tfc:ore/normal_native_gold"), Map.entry(Items.GOLD_NUGGET, "tfc:ore/small_native_gold"),
+                Map.entry(Items.CHAIN, "tfc:metal/chain/wrought_iron"), Map.entry(Items.TORCH, "tfc:torch"));
         fixed.forEach((source, target) -> {
             List<ItemStack> output = StructureLootRules.replace(new ItemStack(source, 3), Profile.DANGEROUS, Map.of(), Map.of(), context);
             helper.assertTrue(output.size() == 1 && output.get(0).getCount() == 3
@@ -203,7 +204,16 @@ public final class LootTableGameTests {
             helper.assertTrue(utility.matches("tfc:(powder/(flux|wood_ash|saltpeter|sylvite)|kaolin_clay)|minecraft:glass(_pane)?"),
                     "Quartz must become a utility item, found " + utility);
         }
-        for (Item kept : List.of(Items.OBSIDIAN, Items.GLOWSTONE_DUST, Items.GLOW_BERRIES, Items.WHEAT,
+        ItemStack bow = new ItemStack(Items.BOW);
+        bow.enchant(helper.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.POWER), 1);
+        bow.setDamageValue(10);
+        Map<ResourceLocation, LootItemFunction> bowEnchantments = Map.of(ResourceLocation.parse("minecraft:bow"),
+                EnchantWithLevelsFunction.enchantWithLevels(helper.getLevel().registryAccess(), ConstantValue.exactly(30)).build());
+        for (ItemStack source : List.of(bow, new ItemStack(Items.CROSSBOW))) {
+            helper.assertTrue(StructureLootRules.replace(source, Profile.ORDINARY, bowEnchantments, Map.of(), context).get(0) == source,
+                    source.getItem() + " replaces itself and must keep its original stack");
+        }
+        for (Item kept : List.of(Items.OBSIDIAN, Items.GLOWSTONE_DUST, Items.GLOW_BERRIES,
                 Items.TURTLE_HELMET, Items.LEATHER_HORSE_ARMOR, Items.GOLDEN_APPLE, Items.TRIDENT)) {
             ItemStack stack = new ItemStack(kept, 2);
             helper.assertTrue(StructureLootRules.replace(stack, Profile.ORDINARY, Map.of(), Map.of(), context).get(0) == stack,
