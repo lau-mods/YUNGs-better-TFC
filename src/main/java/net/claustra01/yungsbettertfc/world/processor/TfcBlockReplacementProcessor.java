@@ -58,6 +58,13 @@ public final class TfcBlockReplacementProcessor extends StructureProcessor {
 
         List<StructureTemplate.StructureBlockInfo> result = new ArrayList<>(processedBlockInfos.size());
         for (StructureTemplate.StructureBlockInfo info : processedBlockInfos) {
+            // Jigsaw pieces are placed once per intersecting chunk. Vanilla
+            // discards positions outside this placement's bounding box; avoid
+            // converting them or loading neighboring chunks just to read below.
+            if (settings.getBoundingBox() != null && !settings.getBoundingBox().isInside(info.pos())) {
+                result.add(info);
+                continue;
+            }
             BlockPos below = info.pos().below();
             BlockState templateStateBelow = templateByPosition.get(below);
             boolean belowIsAir = templateStateBelow != null

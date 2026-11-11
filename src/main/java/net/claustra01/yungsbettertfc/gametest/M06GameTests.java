@@ -111,6 +111,10 @@ public final class M06GameTests {
         StructureTemplate loaded = helper.getLevel().getStructureManager().getOrCreate(loadedId);
         helper.assertTrue(((StructureTemplateIdAccess) (Object) loaded).yungsbettertfc$getTemplateId().equals(loadedId),
                 "StructureTemplateManager must attach the requested template ID");
+        ((StructureTemplateIdAccess) (Object) loaded).yungsbettertfc$setTemplateId(ResourceLocation.parse("test:stale_id"));
+        StructureTemplate fetched = helper.getLevel().getStructureManager().get(loadedId).orElseThrow();
+        helper.assertTrue(loadedId.equals(((StructureTemplateIdAccess) (Object) fetched).yungsbettertfc$getTemplateId()),
+                "StructureTemplateManager.get (used by /place template) must attach the ID even on a cache hit");
         for (String namespace : List.of(
                 "betterstrongholds", "betterdungeons", "betteroceanmonuments", "betterfortresses")) {
             StructurePlaceSettings settings = new StructurePlaceSettings()

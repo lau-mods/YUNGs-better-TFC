@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -266,6 +267,15 @@ public final class ConversionGameTests {
         assertId(helper, byPosition.get(origin.offset(20, 2, 0)), "tfc:rock/mossy_cobble/basalt");
         assertId(helper, byPosition.get(origin.offset(22, 1, 0)), "tfc:rock/hardened/basalt");
         assertId(helper, byPosition.get(origin.offset(24, 1, 0)), "tfc:rock/raw/basalt");
+        var inside = new StructureTemplate.StructureBlockInfo(origin, Blocks.STONE.defaultBlockState(), null);
+        var support = new StructureTemplate.StructureBlockInfo(origin.below(), Blocks.STONE.defaultBlockState(), null);
+        List<StructureTemplate.StructureBlockInfo> clipped = List.of(inside, support);
+        var clippedResult = TfcBlockReplacementProcessor.INSTANCE.finalizeProcessing(
+                nether, origin, origin, clipped, clipped,
+                new StructurePlaceSettings().setBoundingBox(new BoundingBox(origin)));
+        assertId(helper, clippedResult.getFirst().state(), "tfc:rock/raw/basalt");
+        helper.assertTrue(clippedResult.get(1) == support,
+                "Out-of-bounds blocks must be left alone but still supply template support for hardening");
         helper.succeed();
     }
 

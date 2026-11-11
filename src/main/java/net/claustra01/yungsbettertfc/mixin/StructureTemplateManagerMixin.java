@@ -1,5 +1,7 @@
 package net.claustra01.yungsbettertfc.mixin;
 
+import java.util.Optional;
+
 import net.claustra01.yungsbettertfc.access.StructureTemplateIdAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -11,6 +13,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StructureTemplateManager.class)
 public abstract class StructureTemplateManagerMixin {
+    @Inject(method = "get", at = @At("RETURN"), remap = false)
+    private void yungsbettertfc$rememberLoadedTemplateId(
+            ResourceLocation id,
+            CallbackInfoReturnable<Optional<StructureTemplate>> callback) {
+        callback.getReturnValue().ifPresent(template ->
+                ((StructureTemplateIdAccess) (Object) template).yungsbettertfc$setTemplateId(id));
+    }
+
     @Inject(method = "getOrCreate", at = @At("RETURN"), remap = false)
     private void yungsbettertfc$rememberTemplateId(
             ResourceLocation id,

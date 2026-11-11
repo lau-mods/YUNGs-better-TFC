@@ -227,9 +227,105 @@
       "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
       "classname": "yungsbettertfc:empty",
       "name": "lootresourcesareexactandvalid"
+    },
+    {
+      "acId": "AC-F010-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "visualregressionstatesarelegal"
+    },
+    {
+      "acId": "AC-F010-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "convertedstatesandblockentitiesreload"
     }
   ],
-  "e2e": [],
+  "e2e": [
+    {
+      "acId": "AC-F010-001",
+      "scenario": "tests/e2e/structure-rendering.mjs",
+      "procedure": "Confirm spectator mode, loaded chunks and language-independent placement success for four YUNG structures. Capture each structure and Vanilla-input palettes placed through the injected processor in both dimensions; assert converted IDs/properties, retained blocks, plant cleanup and readable Block Entities.",
+      "screenshots": [
+        {
+          "label": "better-mineshaft",
+          "checks": [
+            "converted wood and equipment models",
+            "texture and orientation",
+            "Vanilla keep-list blocks"
+          ]
+        },
+        {
+          "label": "better-stronghold",
+          "checks": [
+            "converted stone, stairs, doors and equipment models",
+            "texture and orientation",
+            "Vanilla keep-list blocks"
+          ]
+        },
+        {
+          "label": "better-ocean-monument",
+          "checks": [
+            "converted aquatic stone and plants",
+            "texture and orientation",
+            "no floating upper seagrass"
+          ]
+        },
+        {
+          "label": "better-fortress",
+          "checks": [
+            "converted Basalt and Overdims wood models",
+            "texture and orientation",
+            "Vanilla Nether keep-list blocks"
+          ]
+        },
+        {
+          "label": "betterstrongholds-converted-palette",
+          "checks": [
+            "converted stairs, doors, signs and utility blocks render with legal orientation",
+            "retained Barrel, Cauldron, lantern, campfire and Blackstone",
+            "aquatic and cactus upper-block removal (Overworld)"
+          ]
+        },
+        {
+          "label": "betterfortresses-converted-palette",
+          "checks": [
+            "converted stairs, doors, signs and utility blocks render with legal orientation",
+            "retained Barrel, Cauldron, lantern, campfire and Blackstone"
+          ]
+        }
+      ],
+      "outcome": "A prior 2026-11-11 run captured four generated YUNG structures and converted palettes in both dimensions. The spectator-readiness repair has not completed a client rerun because this environment denied the dedicated server port bind.",
+      "unverifiedScope": "The repaired spectator-readiness path and an exhaustive review of every procedurally generated room remain unverified in this environment.",
+      "report": ".tmp/e2e/latest-summary.json"
+    },
+    {
+      "acId": "AC-F010-002",
+      "scenario": "tests/e2e/structure-rendering.mjs",
+      "procedure": "Record converted IDs and properties, Barrel LootTable, Cauldron level and readable Chest/Firepit Block Entities in both dimensions. Save with flush, stop the server and client, restart the same world, reconnect and compare those states at the same coordinates.",
+      "screenshots": [
+        {
+          "label": "overworld-after-restart",
+          "checks": [
+            "same converted block IDs and properties after disk-backed restart",
+            "retained Barrel loot and Cauldron level",
+            "Chest/Firepit Block Entities load and render"
+          ]
+        },
+        {
+          "label": "the_nether-after-restart",
+          "checks": [
+            "same converted block IDs and properties after disk-backed restart",
+            "retained Barrel loot and Cauldron level",
+            "Chest/Firepit Block Entities load and render"
+          ]
+        }
+      ],
+      "outcome": "A prior 2026-11-11 run restarted the server and client and retained checked block states, Barrel loot and readable Chest/Firepit Block Entities in both dimensions. The spectator-readiness repair has not completed a client rerun because this environment denied the dedicated server port bind.",
+      "unverifiedScope": "The repaired spectator-readiness path remains unverified in this environment.",
+      "report": ".tmp/e2e/latest-summary.json"
+    }
+  ],
   "startupChecks": [
     {
       "acId": "AC-F001-002",
