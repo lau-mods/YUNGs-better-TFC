@@ -34,14 +34,14 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 @GameTestHolder(YungsBetterTfc.MOD_ID)
 @PrefixGameTestTemplate(false)
-public final class M03GameTests {
+public final class BuildingBlockConversionGameTests {
     private static final String BATCH = "bootstrap";
     private static final ConversionContext OVERWORLD =
             new ConversionContext(DimensionKind.OVERWORLD, "granite", "mollisol", WoodHint.OAK, false);
     private static final ConversionContext NETHER =
             new ConversionContext(DimensionKind.NETHER, "basalt", "oxisol", WoodHint.OAK, false);
 
-    private M03GameTests() {}
+    private BuildingBlockConversionGameTests() {}
 
     @GameTest(template = "empty", batch = BATCH)
     public static void overworldWoodFamiliesAndStates(GameTestHelper helper) {

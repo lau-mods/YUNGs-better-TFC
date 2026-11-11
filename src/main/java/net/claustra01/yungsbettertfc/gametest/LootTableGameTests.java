@@ -40,7 +40,7 @@ import net.neoforged.neoforgespi.locating.IModFile;
 
 @GameTestHolder(YungsBetterTfc.MOD_ID)
 @PrefixGameTestTemplate(false)
-public final class M05GameTests {
+public final class LootTableGameTests {
     private static final String BATCH = "bootstrap";
     private static final Map<String, List<String>> SOURCE_TABLES = sourceTables();
     private static final Set<ResourceLocation> EXPECTED_TABLES = expectedTables();
@@ -48,7 +48,7 @@ public final class M05GameTests {
             ResourceLocation.parse("minecraft:chests/end_city_treasure"),
             ResourceLocation.parse("minecraft:chests/nether_bridge"));
 
-    private M05GameTests() {}
+    private LootTableGameTests() {}
 
     @GameTest(template = "empty", batch = BATCH)
     public static void yungLootTablesLoad(GameTestHelper helper) {

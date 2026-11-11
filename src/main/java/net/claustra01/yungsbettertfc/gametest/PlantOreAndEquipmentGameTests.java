@@ -34,14 +34,14 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 @GameTestHolder(YungsBetterTfc.MOD_ID)
 @PrefixGameTestTemplate(false)
-public final class M04GameTests {
+public final class PlantOreAndEquipmentGameTests {
     private static final String BATCH = "bootstrap";
     private static final ConversionContext RHYOLITE =
             new ConversionContext(DimensionKind.OVERWORLD, "rhyolite", "mollisol", WoodHint.OAK, false);
     private static final ConversionContext UNKNOWN_ROCK =
             new ConversionContext(DimensionKind.OVERWORLD, "missing_rock", "mollisol", WoodHint.OAK, false);
 
-    private M04GameTests() {}
+    private PlantOreAndEquipmentGameTests() {}
 
     @GameTest(template = "empty", batch = BATCH)
     public static void aquaticPlantsAndCactus(GameTestHelper helper) {

@@ -54,11 +54,11 @@ import net.neoforged.neoforgespi.locating.IModFile;
 
 @GameTestHolder(YungsBetterTfc.MOD_ID)
 @PrefixGameTestTemplate(false)
-public final class M06GameTests {
+public final class StructureIntegrationGameTests {
     private static final String BATCH = "bootstrap";
     private static final Map<ResourceLocation, ResourceLocation> ADDED_BIOMES = addedBiomes();
 
-    private M06GameTests() {}
+    private StructureIntegrationGameTests() {}
 
     @GameTest(template = "empty", batch = BATCH)
     public static void biomeTagsExtendYungTags(GameTestHelper helper) {

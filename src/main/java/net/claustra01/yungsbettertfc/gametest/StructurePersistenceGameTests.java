@@ -34,12 +34,12 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 @GameTestHolder(YungsBetterTfc.MOD_ID)
 @PrefixGameTestTemplate(false)
-public final class M07GameTests {
+public final class StructurePersistenceGameTests {
     private static final String BATCH = "bootstrap";
     private static final ResourceKey<LootTable> ABANDONED_MINESHAFT = ResourceKey.create(
             Registries.LOOT_TABLE, ResourceLocation.parse("minecraft:chests/abandoned_mineshaft"));
 
-    private M07GameTests() {}
+    private StructurePersistenceGameTests() {}
 
     @GameTest(template = "empty", batch = BATCH)
     public static void visualRegressionStatesAreLegal(GameTestHelper helper) {
