@@ -1,5 +1,7 @@
 package net.claustra01.yungsbettertfc.mixin;
 
+import java.util.Optional;
+
 import net.claustra01.yungsbettertfc.access.StructureTemplateIdAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -11,12 +13,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StructureTemplateManager.class)
 public abstract class StructureTemplateManagerMixin {
-    // NeoForge runtime uses official names; we don't generate a refmap, so disable remapping.
+    @Inject(method = "get", at = @At("RETURN"), remap = false)
+    private void yungsbettertfc$rememberLoadedTemplateId(
+            ResourceLocation id,
+            CallbackInfoReturnable<Optional<StructureTemplate>> callback) {
+        callback.getReturnValue().ifPresent(template ->
+                ((StructureTemplateIdAccess) (Object) template).yungsbettertfc$setTemplateId(id));
+    }
+
     @Inject(method = "getOrCreate", at = @At("RETURN"), remap = false)
-    private void yungsbettertfc$setTemplateId(ResourceLocation id, CallbackInfoReturnable<StructureTemplate> cir) {
-        StructureTemplate template = cir.getReturnValue();
-        if (template instanceof StructureTemplateIdAccess access) {
-            access.yungsbettertfc$setTemplateId(id);
-        }
+    private void yungsbettertfc$rememberTemplateId(
+            ResourceLocation id,
+            CallbackInfoReturnable<StructureTemplate> callback) {
+        ((StructureTemplateIdAccess) (Object) callback.getReturnValue()).yungsbettertfc$setTemplateId(id);
     }
 }

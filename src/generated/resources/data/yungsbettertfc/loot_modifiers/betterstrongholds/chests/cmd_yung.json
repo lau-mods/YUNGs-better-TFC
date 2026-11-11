@@ -1,0 +1,20 @@
+{
+  "type": "yungsbettertfc:structure_loot_replacement",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "betterstrongholds:chests/cmd_yung"
+    }
+  ],
+  "enchantments": {
+    "minecraft:diamond_sword": {
+      "function": "minecraft:enchant_with_levels",
+      "levels": 30.0,
+      "options": "#minecraft:on_random_loot"
+    }
+  },
+  "fixed": {
+    "minecraft:diamond_sword": "tfc:metal/sword/wrought_iron"
+  },
+  "profile": "dangerous"
+}

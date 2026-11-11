@@ -23,3 +23,18 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Run GameTests
+        run: ./gradlew runGameTestServer
+
+      - name: Run GameTests without optional YUNG mods
+        run: ./gradlew -PoptionalYungMods=none runGameTestServer
+
+      - name: Run GameTests with Better Dungeons only
+        run: ./gradlew -PoptionalYungMods=betterdungeons runGameTestServer
+
+      - name: Check missing TFC Overdims dependency
+        run: |
+          ./gradlew -PwithoutTfcOverdims=true -PoptionalYungMods=none runGameTestServer
+          grep -F "Mod ID: 'tfcoverdims', Requested by: 'yungsbettertfc', Expected range: '[0.1.4,)', Actual version: '[MISSING]'" run/logs/latest.log
+          grep -F 'Mod yungsbettertfc requires tfcoverdims 0.1.4 or above' run/logs/latest.log

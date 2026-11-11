@@ -1,13 +1,17 @@
-# TFC x YUNG's Better Series
+# YUNG's Better TFC
 
-YUNG's Better Seriesの構造物をTerraFirmaCraft環境へ統合するMinecraft 1.21.1 / NeoForge向け互換Modです。
+Compatibility support for YUNG's Better Series structures in TerraFirmaCraft on Minecraft 1.21.1 and NeoForge.
 
-https://www.curseforge.com/minecraft/mc-mods/tfc-x-yungs-better-series
+## Verified baseline
+
+- Java 21
+- NeoForge 21.1.264 for Minecraft 1.21.1
+- TerraFirmaCraft 4.2.12
+- YUNG's API 5.1.6
+- TFC Overdims 0.1.4
+
+YUNG's Better Dungeons, Better Mineshafts, Better Strongholds, Better Ocean Monuments, and Better Nether Fortresses are optional.
 
 ## Build
 
-Requirement: JDK 21
-
-```sh
-./gradlew build
-```
+Run `./gradlew build` with JDK 21. The built mod is written to `build/libs`.

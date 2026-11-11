@@ -1,0 +1,356 @@
+{
+  "gameTests": [
+    {
+      "acId": "AC-F001-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "modloadswithoutbeneath"
+    },
+    {
+      "acId": "AC-F001-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "requireddependenciesdeclared"
+    },
+    {
+      "acId": "AC-F001-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "optionalyungmixingate"
+    },
+    {
+      "acId": "AC-F003-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "additionalrockfamiliesandproperties"
+    },
+    {
+      "acId": "AC-F003-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "legacyrockfamiliesandtemplategeology"
+    },
+    {
+      "acId": "AC-F003-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "sandstoneandsoilfamilies"
+    },
+    {
+      "acId": "AC-F003-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "deepslateblackstoneandendstayunchanged"
+    },
+    {
+      "acId": "AC-F004-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "netherrockfamiliesusebasalt"
+    },
+    {
+      "acId": "AC-F004-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethersoilsuseoxisolandsandkeepscolor"
+    },
+    {
+      "acId": "AC-F004-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "hardeningusesonlyblockdirectlybelow"
+    },
+    {
+      "acId": "AC-F004-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethernativeblocksstayunchanged"
+    },
+    {
+      "acId": "AC-F005-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "overworldwoodfamiliesandstates"
+    },
+    {
+      "acId": "AC-F005-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "netherwoodfamilies"
+    },
+    {
+      "acId": "AC-F005-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "woodhintsutilitiesnbtandhangingsigns"
+    },
+    {
+      "acId": "AC-F006-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "furnacesbecomefirepitsanddiscardnbt"
+    },
+    {
+      "acId": "AC-F006-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "cauldronsandbarrelstayvanilla"
+    },
+    {
+      "acId": "AC-F006-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "lightsconvertandexceptionsstayvanilla"
+    },
+    {
+      "acId": "AC-F006-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "legacymetalmappingsandkeeplist"
+    },
+    {
+      "acId": "AC-F007-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "aquaticplantsandcactus"
+    },
+    {
+      "acId": "AC-F007-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "untargetedplantsandregisteredpots"
+    },
+    {
+      "acId": "AC-F007-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "generaloresandgranitefallback"
+    },
+    {
+      "acId": "AC-F007-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "finalstateorerewriting"
+    },
+    {
+      "acId": "AC-F007-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "netheroresremain"
+    },
+    {
+      "acId": "AC-F007-005",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "displayentityequipmentandendexclusion"
+    },
+    {
+      "acId": "AC-F002-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "overworldtemplateuseslocalgeology"
+    },
+    {
+      "acId": "AC-F002-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethertemplateusesdedicatedconversions"
+    },
+    {
+      "acId": "AC-F002-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "endcitytemplateremainsunchanged"
+    },
+    {
+      "acId": "AC-F002-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "displayentityequipmentandendexclusion"
+    },
+    {
+      "acId": "AC-F008-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "biometagsextendyungtags"
+    },
+    {
+      "acId": "AC-F008-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "directpiececontextandoptionalmixins"
+    },
+    {
+      "acId": "AC-F008-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "optionalpiecesplaceconvertedblocks"
+    },
+    {
+      "acId": "AC-F008-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "nethertemplateusesdedicatedconversions"
+    },
+    {
+      "acId": "AC-F008-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "betterfortressesaddsnoworldgendefinition"
+    },
+    {
+      "acId": "AC-F008-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "targettemplatesappendprocessoronce"
+    },
+    {
+      "acId": "AC-F009-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "yungloottablesload"
+    },
+    {
+      "acId": "AC-F009-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "structurelootmodifiersreplacerolleditems"
+    },
+    {
+      "acId": "AC-F009-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "lootresourcesareexactandvalid"
+    },
+    {
+      "acId": "AC-F009-003",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "overdimshandlesdelegatedloot"
+    },
+    {
+      "acId": "AC-F009-004",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "lootresourcesareexactandvalid"
+    },
+    {
+      "acId": "AC-F010-001",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "visualregressionstatesarelegal"
+    },
+    {
+      "acId": "AC-F010-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "convertedstatesandblockentitiesreload"
+    },
+    {
+      "acId": "AC-F008-002",
+      "report": "build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-all.xml",
+      "classname": "yungsbettertfc:empty",
+      "name": "oceanmonumentwaterbecomessaltwater"
+    }
+  ],
+  "e2e": [
+    {
+      "acId": "AC-F010-001",
+      "scenario": "tests/e2e/structure-rendering.mjs",
+      "procedure": "Confirm spectator mode, loaded chunks and language-independent placement success for four YUNG structures. Capture each structure and Vanilla-input palettes placed through the injected processor in both dimensions; assert converted IDs/properties, retained blocks, plant cleanup and readable Block Entities.",
+      "screenshots": [
+        {
+          "label": "better-mineshaft",
+          "checks": [
+            "converted wood and equipment models",
+            "texture and orientation",
+            "Vanilla keep-list blocks"
+          ]
+        },
+        {
+          "label": "better-stronghold",
+          "checks": [
+            "converted stone, stairs, doors and equipment models",
+            "texture and orientation",
+            "Vanilla keep-list blocks"
+          ]
+        },
+        {
+          "label": "better-ocean-monument",
+          "checks": [
+            "converted aquatic stone and plants",
+            "texture and orientation",
+            "no floating upper seagrass"
+          ]
+        },
+        {
+          "label": "better-fortress",
+          "checks": [
+            "converted Basalt and Overdims wood models",
+            "texture and orientation",
+            "Vanilla Nether keep-list blocks"
+          ]
+        },
+        {
+          "label": "betterstrongholds-converted-palette",
+          "checks": [
+            "converted stairs, doors, signs and utility blocks render with legal orientation",
+            "retained Barrel, Cauldron, lantern, campfire and Blackstone",
+            "aquatic and cactus upper-block removal (Overworld)"
+          ]
+        },
+        {
+          "label": "betterfortresses-converted-palette",
+          "checks": [
+            "converted stairs, doors, signs and utility blocks render with legal orientation",
+            "retained Barrel, Cauldron, lantern, campfire and Blackstone"
+          ]
+        }
+      ],
+      "outcome": "A prior 2026-11-11 run captured four generated YUNG structures and converted palettes in both dimensions. The spectator-readiness repair has not completed a client rerun because this environment denied the dedicated server port bind.",
+      "unverifiedScope": "The repaired spectator-readiness path and an exhaustive review of every procedurally generated room remain unverified in this environment.",
+      "report": ".tmp/e2e/latest-summary.json"
+    },
+    {
+      "acId": "AC-F010-002",
+      "scenario": "tests/e2e/structure-rendering.mjs",
+      "procedure": "Record converted IDs and properties, Barrel LootTable, Cauldron level and readable Chest/Firepit Block Entities in both dimensions. Save with flush, stop the server and client, restart the same world, reconnect and compare those states at the same coordinates.",
+      "screenshots": [
+        {
+          "label": "overworld-after-restart",
+          "checks": [
+            "same converted block IDs and properties after disk-backed restart",
+            "retained Barrel loot and Cauldron level",
+            "Chest/Firepit Block Entities load and render"
+          ]
+        },
+        {
+          "label": "the_nether-after-restart",
+          "checks": [
+            "same converted block IDs and properties after disk-backed restart",
+            "retained Barrel loot and Cauldron level",
+            "Chest/Firepit Block Entities load and render"
+          ]
+        }
+      ],
+      "outcome": "A prior 2026-11-11 run restarted the server and client and retained checked block states, Barrel loot and readable Chest/Firepit Block Entities in both dimensions. The spectator-readiness repair has not completed a client rerun because this environment denied the dedicated server port bind.",
+      "unverifiedScope": "The repaired spectator-readiness path remains unverified in this environment.",
+      "report": ".tmp/e2e/latest-summary.json"
+    }
+  ],
+  "startupChecks": [
+    {
+      "acId": "AC-F001-002",
+      "command": "./gradlew -PwithoutTfcOverdims=true -PoptionalYungMods=none runGameTestServer",
+      "log": "run/logs/latest.log",
+      "expectedMessage": "Mod yungsbettertfc requires tfcoverdims 0.1.4 or above"
+    }
+  ],
+  "scriptChecks": [
+    {
+      "acId": "AC-F009-004",
+      "command": "./gradlew runData && git diff --exit-code -- src/generated/resources && test -z \"$(git status --porcelain -- src/generated/resources)\"",
+      "expected": "Exit 0; the 33 structure loot modifiers, the NeoForge global loot modifier list, and the fertilizer item tag regenerate without changes; no loot table and no Nether Bridge or End City modifier is generated."
+    }
+  ]
+}

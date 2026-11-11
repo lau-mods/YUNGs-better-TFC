@@ -1,7 +1,9 @@
 package net.claustra01.yungsbettertfc.mixin;
 
 import java.util.Set;
+
 import javax.annotation.Nullable;
+
 import net.claustra01.yungsbettertfc.access.StructureTemplateIdAccess;
 import net.claustra01.yungsbettertfc.world.processor.TfcBlockReplacementProcessor;
 import net.minecraft.core.BlockPos;
@@ -19,15 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(StructureTemplate.class)
 public abstract class StructureTemplateMixin implements StructureTemplateIdAccess {
     @Unique
-    private static final Set<String> YBTF_STRUCTURE_NAMESPACES =
-            Set.of(
-                    "betterstrongholds",
-                    "betterdungeons",
-                    "betteroceanmonuments",
-                    "betterfortresses",
-                    "beneath");
-
-    @Unique private static final String VANILLA_END_CITY_TEMPLATE_PREFIX = "end_city/";
+    private static final Set<String> YUNGSBETTERTFC_TARGET_NAMESPACES = Set.of(
+            "betterstrongholds", "betterdungeons", "betteroceanmonuments", "betterfortresses");
 
     @Unique @Nullable private ResourceLocation yungsbettertfc$templateId;
 
@@ -39,33 +34,26 @@ public abstract class StructureTemplateMixin implements StructureTemplateIdAcces
 
     @Override
     public void yungsbettertfc$setTemplateId(ResourceLocation id) {
-        this.yungsbettertfc$templateId = id;
+        yungsbettertfc$templateId = id;
     }
 
-    // NeoForge runtime uses official names; we don't generate a refmap, so disable remapping.
     @Inject(method = "placeInWorld", at = @At("HEAD"), remap = false)
-    private void yungsbettertfc$addProcessor(
-            ServerLevelAccessor serverLevel,
+    private void yungsbettertfc$appendProcessor(
+            ServerLevelAccessor level,
             BlockPos offset,
-            BlockPos pos,
+            BlockPos position,
             StructurePlaceSettings settings,
             RandomSource random,
             int flags,
-            CallbackInfoReturnable<Boolean> cir) {
-        ResourceLocation id = this.yungsbettertfc$templateId;
-        if (id == null || !yungsbettertfc$isTargetTemplate(id)) {
+            CallbackInfoReturnable<Boolean> callback) {
+        if (yungsbettertfc$templateId == null
+                || !YUNGSBETTERTFC_TARGET_NAMESPACES.contains(yungsbettertfc$templateId.getNamespace())) {
             return;
         }
-
-        // Ensure we run after the structure's own processors (we append to the end).
-        if (!settings.getProcessors().contains(TfcBlockReplacementProcessor.INSTANCE)) {
-            settings.addProcessor(TfcBlockReplacementProcessor.INSTANCE);
+        if (settings.getProcessors().stream().noneMatch(TfcBlockReplacementProcessor.class::isInstance)) {
+            settings.addProcessor(yungsbettertfc$templateId.getNamespace().equals("betteroceanmonuments")
+                    ? TfcBlockReplacementProcessor.OCEAN_MONUMENT
+                    : TfcBlockReplacementProcessor.INSTANCE);
         }
-    }
-
-    @Unique
-    private static boolean yungsbettertfc$isTargetTemplate(ResourceLocation id) {
-        return YBTF_STRUCTURE_NAMESPACES.contains(id.getNamespace())
-                || ("minecraft".equals(id.getNamespace()) && id.getPath().startsWith(VANILLA_END_CITY_TEMPLATE_PREFIX));
     }
 }

@@ -1,473 +1,217 @@
-# YUNG's Better TFC 仕様
+# YUNG's Better TFC development specification
 
-このリポジトリは Minecraft 1.21.1 / NeoForge 向けの TerraFirmaCraft
-互換 mod である。目的は、YUNG's Better Series の構造物を TFC の地形に
-生成できるようにし、構造物内のバニラブロック、装備、戦利品を TFC 相当に
-置換すること。
+## Source of truth
 
-今後の変更では、このファイルを仕様として扱う。ここに書かれた互換挙動は、
-ユーザーが明示的に変更を求めた場合を除いて維持する。
+`PROJECT.md` is the authoritative product specification. This file records repository-wide implementation rules and the currently implemented milestone. When the two disagree, follow `PROJECT.md`.
 
-## 共通開発ルール
+## Common rules
 
-- 仕様ファイル名は `AGENTS.md` とする。
-- 小文字の `agents.md` は使わない。
-- 本書は作業規約と実装仕様を兼ねる。正確な数値、ID、条件、fallback、例外、優先順位は残し、同一規則の全registry entry転記は共通式へ畳む。
-- READMEは利用者向けの短い概要、配布先、build入口に絞り、詳細仕様を重複掲載しない。
-- ライセンスと第三者表示はrootの `LICENCE` 一つへ統合し、別のlicense/noticeファイルを作らない。
-- 挙動、対応版、依存、対象構造物、置換規則、worldgen、loot、検証手順を変更した場合は同じ変更で本書も更新する。
-- 対象版の実JAR・公式ソースで確認し、公開済みID、client/server境界、optional依存なしのclass loadingを守る。
-- 依存JAR、展開物、解析・生成scriptは `.tmp/` に置いてGit管理外にする。仕様と生成済みresourceを正本とし、JSONはBOMなしUTF-8とする。
-- 無関係な差分、依存・version更新、format変更を混ぜない。
+- Target Minecraft 1.21.1, NeoForge 21.1.264, and Java 21.
+- Keep the mod ID and resource namespace `yungsbettertfc`, and keep Java sources under `net.claustra01.yungsbettertfc`.
+- Prefer vanilla, NeoForge, TFC, Overdims, and YUNG APIs over custom systems.
+- Never reference an optional mod class from an unconditional load path. Detect optional mods by string mod ID and keep their Mixins below the matching package gate.
+- Keep version ranges open above a verified 1.21.1 lower bound. An open range is not a claim that untested future releases are compatible.
+- Add no block, item, GUI, config screen, or texture unless a milestone explicitly requires it.
+- Register state and logic checks as GameTests and rendering checks as E2E scenarios. Keep `tests/acceptance.json` synchronized with their reports.
+- Run `./gradlew build` and `./gradlew runGameTestServer` before handoff.
 
-## バージョンと依存関係
+## Dependency contract
 
-- Minecraft: `1.21.1`
-- NeoForge: `21.1.219`
-- Java: `21`
-- mod id: `yungsbettertfc`
-- 必須実行時 mod:
-  - `tfc`
-  - `yungsapi`
-- 任意実行時 mod:
-  - `beneath`
-  - `betterdungeons`
-  - `betterfortresses`
-  - `bettermineshafts`
-  - `betteroceanmonuments`
-  - `betterstrongholds`
-- 任意 YUNG 系 dependency は `optional` のままにする。
-- `tfc` と `yungsapi` は `required` のままにする。
-- `beneath` と YUNG 系 optional dependency は `ordering="AFTER"` のままにする。
-- `build.gradle` の実装依存は NeoForge userdev のみでよい。TFC と YUNG 系 mod
-  との実行時関係は `META-INF/neoforge.mods.toml` で表現する。
+| Mod ID | Role | Verified lower bound | Development artifact |
+| --- | --- | --- | --- |
+| `tfc` | required | 4.2.12 | TerraFirmaCraft 1.21.1 |
+| `yungsapi` | required | 5.1.6 | YUNG's API 1.21.1 NeoForge |
+| `tfcoverdims` | required | 0.1.4 | TFC Overdims 1.21.1 NeoForge |
+| `betterdungeons` | optional | 5.1.3 | Better Dungeons 1.21.1 NeoForge |
+| `bettermineshafts` | optional | 5.1.1 | Better Mineshafts 1.21.1 NeoForge |
+| `betterstrongholds` | optional | 5.1.3 | Better Strongholds 1.21.1 NeoForge |
+| `betteroceanmonuments` | optional | 4.1.1 | Better Ocean Monuments 1.21.1 NeoForge |
+| `betterfortresses` | optional | 3.1.5 | Better Nether Fortresses 1.21.1 NeoForge |
 
-## 依存元実装の比較基準
+## Current implementation
 
-YUNG 系 mod と比較する場合は、Minecraft 1.21.1 に合わせて以下の依存元を
-基準にする。
+Milestone M07 provides the bootstrap, dependency boundary, conversion core, structure loot replacement, YUNG structure integration, and rendering and reload regression coverage:
 
-- `YUNG-GANG/YUNGs-Better-Dungeons`, branch `1.21.1`
-- `YUNG-GANG/YUNGs-Better-Strongholds`, branch `1.21.1`
-- `YUNG-GANG/YUNGs-Better-Fortresses`, branch `1.21.1`
-- `YUNG-GANG/YUNGs-Better-Mineshafts`, branch `1.21.1`
-- `YUNG-GANG/YUNGs-Better-Ocean-Monuments`, branch `1.21.1`
+- Distribution version `1.0.0` with `@Mod("yungsbettertfc")`.
+- Required and optional dependencies exactly as listed above.
+- No Beneath dependency or runtime integration.
+- `yungsbettertfc.mixins.json` uses `YungsBetterTfcMixinPlugin`. Mixins below `mixin.bettermineshafts`, `mixin.betterdungeons`, `mixin.betterstrongholds`, `mixin.betteroceanmonuments`, and `mixin.betterfortresses` load only when their matching mod is present.
+- `yungsbettertfc:tfc_block_replacement` is a registered unit-codec structure processor. It converts only `minecraft:` input blocks in the Overworld and Nether and performs no conversion in the End or an unknown/custom dimension.
+- Overworld geology scans downward from the placement origin for at most 64 blocks. It detects `tfc:rock/raw/<rock>` and TFC soil-family blocks, caches the combined result in a bounded thread-safe placement-origin cache, and defaults to `granite` and `mollisol`. Nether conversion always uses `basalt` and `oxisol`.
+- Conversion output is accepted only when the block registry contains it, and compatible state properties are copied by property name and value. Missing output IDs preserve the original block.
+- Hardening uses only the block directly below each result. The processor indexes the processed template list in `finalizeProcessing`; positions outside that list use the existing level state. Blocks outside the placement bounding box remain in that support index but skip conversion and level reads, matching Vanilla placement clipping and avoiding repeated off-chunk work for jigsaw pieces.
+- The nine Overworld Vanilla wood families map to their TFC wood families. Crimson and Warped wood map to registered `tfcoverdims:wood/*` blocks only in the Nether; hanging signs remain Vanilla.
+- `finalizeProcessing` counts explicit wood IDs in the original template palette once per placement. Chest, trapped chest, lectern, and crafting table use that hint, default to TFC Oak, retain their original NBT, and use Overdims wood utilities for a Crimson or Warped hint.
+- Furnace, blast furnace, and smoker become `tfc:firepit`; their horizontal facing supplies the TFC firepit axis and only these conversions discard Block Entity NBT. Vanilla cauldrons and barrels remain unchanged with their state and NBT.
+- Vanilla torch and candle families map to registered TFC blocks. Lantern, soul lantern, both campfires, and soul torches remain Vanilla.
+- Wrought Iron, Gold, and Copper use the maintained M03 mappings. Copper oxidation stage and registered stairs/slab shape are retained. Nether coal blocks become `tfc:bituminous_coal`; the specified utility and decoration keep list remains Vanilla.
+- Kelp becomes water; seagrass and the lower half of tall seagrass become TFC eel grass; the upper tall-seagrass half becomes water. Sea pickles, vines, cactus bases, and dead bushes use their registered TFC equivalents. Additional cactus blocks become air based on the processed template position index. Registered `tfc:plant/potted/*` outputs are used, while other plants remain Vanilla.
+- Vanilla Overworld and Deepslate ores use the maintained TFC ore priority table and the detected rock, with a Granite registry fallback. Nether Gold Ore, Nether Quartz Ore, and Ancient Debris always remain Vanilla. The same rules rewrite parseable Vanilla ore states in `final_state` NBT, copying only compatible properties and retaining trailing NBT.
+- Item frames, glow item frames, and armor stands convert supported Vanilla equipment to registered TFC Wrought Iron equipment in the Overworld and Nether. Incompatible item component, tag, and damage data is removed after replacement. Display entities are unchanged in the End or an unknown dimension.
+- The mod overrides no loot table. 33 `yungsbettertfc:structure_loot_replacement` global loot modifiers target Better Dungeons 8, Better Fortresses 9, Better Ocean Monuments 1, Better Strongholds 10, and Vanilla `abandoned_mineshaft`, `simple_dungeon`, and `stronghold_*` 5 tables, and `StructureLootRules` replaces only the stacks those unmodified tables rolled. Nether Bridge and End City Treasure have no modifier from this mod so TFC Overdims handles those tables with its global loot modifiers.
+- Loot replacement retains the Ordinary, Dangerous, and Lategame tiers. General ingot candidates are Copper/Bronze/Bismuth Bronze/Black Bronze/Wrought Iron, Wrought Iron/Steel, and Steel/Black Steel respectively; Red and Blue Steel are not added. A rolled replacement equal to the source item, such as a bow, crossbow, or charcoal, keeps the original stack. Vanilla wheat becomes `tfc:food/wheat`.
+- `./gradlew runData` runs `DataGenerators`, which reads the pristine source tables from their own mod files and writes the modifiers, the NeoForge global loot modifier list, and the `loot/fertilizers` item tag to `src/generated/resources`.
+- `StructureTemplateManagerMixin` records template IDs for both `get` (including `/place template` and cache hits) and `getOrCreate`, and `StructureTemplateMixin` appends the replacement processor once after existing processors for `betterstrongholds`, `betterdungeons`, `betteroceanmonuments`, and `betterfortresses` templates. Unknown templates, `beneath:*`, and `minecraft:end_city/*` are not targeted.
+- Better Mineshafts and Better Dungeons Spider Dungeon pieces are marked by optional-mod-gated, string-targeted Mixins. Their inherited `StructurePiece` block and chest placement uses the common conversion path; Better Mineshafts' direct leg, pillar, and column `WorldGenLevel#setBlock` calls do as well. Direct placement resolves the dimension from `WorldGenLevel`, detects Overworld geology, uses Nether Basalt/Oxisol, remembers a bounded placement-origin wood hint, and does nothing in the End or an unknown dimension.
+- Twelve `replace:false` YUNG biome-tag additions are maintained: four Better Dungeons tags, one Better Strongholds tag, one Better Ocean Monuments tag, and six Better Mineshafts tags. The Ocean Monument addition includes `tfc:ocean` and `tfc:ocean_reef`. No structure or structure-set definition is provided, and Better Fortresses remains generated by its own YUNG jigsaw implementation.
+- Client E2E confirms placement and photographs all four target structure types plus processor-converted Vanilla input palettes, then saves, restarts the dedicated server and client, and verifies the same converted states and Block Entity data in both dimensions.
+- Reload regression tests serialize and load converted chest and firepit Block Entities in the Overworld and Nether and retain door state, the abandoned-mineshaft Barrel loot table and seed, and water or powder-snow Cauldron levels.
 
-`minecraft:` 名前空間の戦利品テーブル上書きは Minecraft バニラ `1.21.1` の
-data を基準に比較する。
+## M04 conversion tables
 
-## 構造物プロセッサ注入仕様
-
-- `yungsbettertfc:tfc_block_replacement` という構造物プロセッサ type を登録する。
-- `StructureTemplateManager#getOrCreate` の戻り値に、読み込まれたテンプレート id を保存する。
-- `StructureTemplate#placeInWorld` の先頭で、対象テンプレートに
-  `TfcBlockReplacementProcessor.INSTANCE` を追加する。
-- 対象テンプレート名前空間:
-  - `betterstrongholds`
-  - `betterdungeons`
-  - `betteroceanmonuments`
-  - `betterfortresses`
-  - `beneath`
-- バニラ名前空間は全体を対象にせず、`minecraft:end_city/*` のテンプレートだけを
-  追加対象にする。
-- プロセッサは構造物側の既存プロセッサの後に実行されるよう、末尾へ追加する。
-- 同じ `StructurePlaceSettings` に同一プロセッサ instance を重複追加しない。
-
-## 実行時ブロック置換の共通仕様
-
-- 置換対象は `minecraft:` 名前空間のブロックだけ。
-- air は即時スキップする。
-- `infested_` で始まる path は、接頭辞を外して通常ブロックとして扱う。
-- Overworld では全置換 scope を使う。
-- Overworld 以外では utility-only scope を使う。
-- ただし furnace/firepit 置換と ore 置換は、dimension に関係なく常に処理する。
-- 既定値:
-  - Overworld rock: `granite`
-  - Nether rock: `basalt`
-  - End rock: `granite`
-  - soil: `mollisol`
-  - wood: `oak`
-- 全置換 scope では、cache origin から下方向へ最大 64 block 調べ、TFC rock/soil を検出する。
-- rock、soil、wood hint はテンプレートでは配置 origin ごと、Better Mineshafts の
-  `StructurePiece` 生成では piece bounding box の最小座標ごとに cache する。
-- 置換先 block が同名 property と同じ値を持てる場合、置換元 block state の property を引き継ぐ。
-- フルブロックの `tfc:rock/raw/<rock>`, `tfc:rock/cobble/<rock>`,
-  `tfc:rock/mossy_cobble/<rock>` は、配置座標の真下が air の場合だけ
-  `tfc:rock/hardened/<rock>` に置換する。全対象構造物のテンプレート配置と
-  Java `StructurePiece` 直接配置の両方へ適用する。stairs、slab、wall は対象外とする。
-- block entity NBT の `final_state` にバニラ ore block id がある場合、そこも TFC ore に置換する。
-- `furnace` を `tfc:firepit` に置換する場合:
-  - furnace/campfire 由来の block entity NBT は破棄する。
-  - horizontal facing から firepit の axis を可能な範囲で設定する。
-- `tall_seagrass` の upper half は `minecraft:water` に置換する。
-
-## 実行時ブロック置換マップ
-
-具体的なregistry entryの正本は `TfcBlockReplacementProcessor` とする。変更時は以下の変換規則、fallback順、scopeを同時に保つ。
-
-### 設備・鉱石
-
-- `furnace`、`smoker`、`blast_furnace`、`campfire`、`soul_campfire` はTFC firepitへ置換し、互換性のないblock entity NBTを破棄する。
-- Vanilla oreはTFC鉱石候補を優先順で解決し、配置地点のrock種を使う。対象gradeがないgem・coal系は非品位鉱石を使う。
-- Deepslate oreも同じTFC oreへ統合し、Vanillaのstone/deepslate差をTFC側へ持ち込まない。
-- ore候補がregistryに存在しない場合は次候補へ進み、全候補がない場合は元blockを維持する。
-
-### 岩石・砂岩・土壌
-
-`<rock>` は周辺から検出したTFC rock、未検出時は既定rock。各Vanilla形状を次のTFC familyへ対応させる。
-
-| Vanilla family | TFC family |
+| Vanilla input | Output |
 | --- | --- |
-| stone / stone bricks | raw / bricks |
-| cobblestone | cobble |
-| polished stone | smooth |
-| chiseled stone | chiseled |
-| cracked / mossy bricks | cracked_bricks / mossy_bricks |
-| slab / stairs / wall / button / pressure plate | 同じfamilyの対応形状 |
-| stonecutter | `tfc:rock/loose/<rock>` |
+| `kelp`, `kelp_plant` | `minecraft:water` |
+| `seagrass`, lower `tall_seagrass` | `tfc:plant/eel_grass` |
+| upper `tall_seagrass` | `minecraft:water` |
+| `sea_pickle`, `vine`, `dead_bush` | `tfc:sea_pickle`, `tfc:plant/ivy`, `tfc:plant/dead_bush` |
+| base `cactus`, upper `cactus` | `tfc:plant/silken_pincushion_cactus`, air |
+| `potted_*` | registered `tfc:plant/potted/<plant>` only |
 
-- Andesite、diorite、granite、deepslate、blackstone、tuff等も、構造物内では検出rockの同等familyへ統合する。
-- Yellow/Red sandstoneは色を維持し、raw/cut/smoothと各slab/stairs/wallへ対応させる。
-- `<soil>` は検出したTFC soil、未検出時は `mollisol`。dirt、coarse dirt、grass、grass path、rooted dirt、farmlandは同soilのTFC blockへ置換する。
-- sandはyellow、red sandはredのTFC sandへ置換する。
+Coal ore tries `tfc:lignite` and then `tfc:bituminous_coal`. Iron ore tries normal Hematite, Magnetite, and Limonite. Copper, Gold, Lapis, Diamond, Emerald, and Redstone use normal Native Copper, normal Native Gold, Lapis Lazuli, Diamond, Emerald, and Cinnabar respectively. Rock-specific candidates try the detected rock and then Granite for each ore candidate. Normal and Deepslate inputs share the same result.
 
-### 木材
+Vanilla swords, axes, pickaxes, shovels, hoes, helmets, chestplates, leggings, boots, shields, and maces map to the matching TFC Wrought Iron item, with leggings mapped to greaves. Bows, crossbows, and tridents map to a Wrought Iron javelin. Missing output items preserve the original stack.
 
-`<wood>` はtemplate内のVanilla wood hintをTFC woodへ正規化した値とする。
+## M03 conversion tables
 
-- 直接対応: oak、spruce、birch、acacia、mangrove。
-- `dark_oak`、`cherry`、`bamboo`、`crimson`、`warped` はoakへ、`jungle` はacaciaへ正規化する。
-- log/wood/stripped系、planks、slab、stairs、fence、fence gate、door、trapdoor、button、pressure plate、signは同じTFC wood familyへ置換する。
-- chest、trapped chest、lectern、crafting tableはそれぞれTFC chest、trapped chest、lectern、workbenchへ置換する。
-- utility-only scopeでは木材建材を置換せず、chest、trapped chest、lectern、crafting tableだけを対象にする。
-- utility-only scopeではcoal blockも `tfc:bituminous_coal` へ置換する。
-
-### 金属・装飾・容器・灯り
-
-- iron bars、chain、iron trapdoor等の鉄製構造物部品はTFC wrought iron相当へ置換する。
-- flower pot、植木、grass、fern、vine等は、TFCに明確な相当品があるものだけ置換する。植物の設置stateとNBTを壊さない。
-- torch、wall torch、lantern、candleはTFC相当品へ置換し、wall/facing等の共有propertyを引き継ぐ。
-- barrel、cauldron、composter等はTFC設備に1対1互換がある場合だけ置換し、block entity NBT互換がない場合は破棄する。
-- 対応先が存在しない装飾blockはVanillaのまま維持し、推測で近似blockへ置換しない。
-
-### Beneath連携
-
-- NetherかつBeneathの対象registry entryが存在する場合だけ、Netherrack、Nether brick、soul soil系、fungus wood、ore、utility blockをBeneath/TFC相当へ置換する。
-- Beneath未導入時はBeneath classを参照せず、registry lookup失敗を元block維持へfallbackする。
-- Better FortressesとBeneath templateではutility-only scopeを基本とし、Nether固有地形をOverworld rock/soilへ変換しない。
-
-## エンティティ装備置換
-
-- `minecraft:` entity だけを処理する。
-- `item_frame` と `glow_item_frame` は `Item` stack を置換する。
-- `armor_stand` は `ArmorItems` と `HandItems` の stack を置換する。
-- 対象テンプレートの名前空間にかかわらず `wrought_iron` を使う。
-  Better Strongholdsも例外にしない。
-- item id 置換:
-  - `*_sword` -> `tfc:metal/sword/<metal>`
-  - `*_axe` -> `tfc:metal/axe/<metal>`
-  - `*_pickaxe` -> `tfc:metal/pickaxe/<metal>`
-  - `*_shovel` -> `tfc:metal/shovel/<metal>`
-  - `*_hoe` -> `tfc:metal/hoe/<metal>`
-  - `*_helmet` -> `tfc:metal/helmet/<metal>`
-  - `*_chestplate` -> `tfc:metal/chestplate/<metal>`
-  - `*_leggings` -> `tfc:metal/greaves/<metal>`
-  - `*_boots` -> `tfc:metal/boots/<metal>`
-  - `shield` -> `tfc:metal/shield/<metal>`
-  - `bow`, `crossbow`, `trident` -> `tfc:metal/javelin/<metal>`
-  - `mace` -> `tfc:metal/mace/<metal>`
-- stack id 置換後は、元 stack の `components`, `tag`, `Damage`, `damage` を削除する。
-
-## ワールド生成差分
-
-YUNG 側の `worldgen/structure/*.json` は `biomes` で
-`#<mod>:has_structure/...` を参照する。この mod は同じ tag path を追加提供し、
-TFC biome tag を足す。全て `replace:false` なので、依存元のバニラ/forge/c tag は
-消さずに追加する。
-
-### Better Dungeons
-
-以下の依存元 tag に `#yungsbettertfc:tfc_land_biomes` と
-`#yungsbettertfc:tfc_coastal_biomes` を追加する。
-
-- `data/betterdungeons/tags/worldgen/biome/has_structure/skeleton_dungeon.json`
-- `data/betterdungeons/tags/worldgen/biome/has_structure/small_dungeon.json`
-- `data/betterdungeons/tags/worldgen/biome/has_structure/spider_dungeon.json`
-- `data/betterdungeons/tags/worldgen/biome/has_structure/zombie_dungeon.json`
-
-`small_nether_dungeon` は上書きしない。依存元通り Nether 構造物のままにする。
-`small_nether_dungeon` の prop NBT に含まれる `minecraft:coal_block` は、
-utility-only scope の共通置換で `tfc:bituminous_coal` に置換する。
-
-Spider Dungeon は template pool / NBT ではなく
-`com.yungnickyoung.minecraft.betterdungeons.world.structure.spider_dungeon.piece.`
-配下の Java `StructurePiece` 実装で主な洞窟形状を生成する。`SpiderDungeonNestPiece`,
-`SpiderDungeonSmallTunnelPiece`, `SpiderDungeonBigTunnelPiece`, `SpiderDungeonEggRoomPiece`
-はいずれも `Blocks.COBBLESTONE` などを vanilla `StructurePiece#placeBlock` 経由で配置するため、
-Better Mineshafts と同じ `WorldGenLevel#setBlock` redirect で
-`TfcBlockReplacementProcessor` の共通ブロック置換を適用する。
-
-### Better Strongholds
-
-- `data/betterstrongholds/tags/worldgen/biome/has_structure/better_stronghold.json`
-  に `#yungsbettertfc:tfc_land_biomes` と
-  `#yungsbettertfc:tfc_coastal_biomes` を追加する。
-
-### Better Ocean Monuments
-
-- `data/betteroceanmonuments/tags/worldgen/biome/has_structure/better_ocean_monument.json`
-  に `#yungsbettertfc:tfc_deep_ocean_biomes` を追加する。
-
-### Better Mineshafts
-
-TFC Overworld へ生成させる variant は以下の 6 種だけにする。
-
-- `oak`
-- `desert`
-- `red_desert`
-- `mesa`
-- `ice`
-- `spruce_snowy`
-
-`overgrown` は現時点では採用しない。`acacia`, `dripstone`, `jungle`, `lush`,
-`mushroom`, `spruce`, `overgrown` の TFC biome tag override は追加しない。
-
-以下の依存元 tag に、それぞれ対応する `yungsbettertfc` 側の TFC 専用 biome tag を
-追加する。全て `replace:false` とし、依存元の vanilla/forge/c tag は消さない。
-
-- `data/bettermineshafts/tags/worldgen/biome/has_structure/better_mineshaft_oak.json`
-  に `#yungsbettertfc:tfc_mineshaft_oak_biomes` を追加する。
-- `data/bettermineshafts/tags/worldgen/biome/has_structure/better_mineshaft_desert.json`
-  に `#yungsbettertfc:tfc_mineshaft_desert_biomes` を追加する。
-- `data/bettermineshafts/tags/worldgen/biome/has_structure/better_mineshaft_red_desert.json`
-  に `#yungsbettertfc:tfc_mineshaft_red_desert_biomes` を追加する。
-- `data/bettermineshafts/tags/worldgen/biome/has_structure/better_mineshaft_mesa.json`
-  に `#yungsbettertfc:tfc_mineshaft_mesa_biomes` を追加する。
-- `data/bettermineshafts/tags/worldgen/biome/has_structure/better_mineshaft_ice.json`
-  に `#yungsbettertfc:tfc_mineshaft_ice_biomes` を追加する。
-- `data/bettermineshafts/tags/worldgen/biome/has_structure/better_mineshaft_spruce_snowy.json`
-  に `#yungsbettertfc:tfc_mineshaft_spruce_snowy_biomes` を追加する。
-
-Better Mineshafts は template pool / NBT ではなく Java の `StructurePiece` 実装で
-主なブロックを生成するため、`StructureTemplateMixin` の processor 注入だけでは
-ブロック置換が効かない。Better Mineshafts の各 piece は木材、石材、作業台などの
-大半を vanilla `StructurePiece#placeBlock` 経由で配置するため、このメソッドの
-`WorldGenLevel#setBlock` 呼び出しを mixin で redirect する。実行時の piece class 名が
-`com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.` で始まる場合だけ、
-既存の `TfcBlockReplacementProcessor` と同じブロック置換を適用する。
-
-Better Mineshafts の dungeon chest は vanilla `StructurePiece#createChest` 経由で
-配置されるため、この chest 設置も同じ条件で redirect する。TFC chest block entity は
-vanilla `ChestBlockEntity` を継承するため、依存元の loot table 設定は維持される。
-
-依存元 `BetterMineshaftPiece` では、空洞/溶岩上の脚生成だけ
-`StructurePiece#placeBlock` を経由せず、`generateLegOrChain`,
-`generatePillarDownOrChainUp`, `fillColumnBetween` から直接 `WorldGenLevel#setBlock`
-する。この直接配置も `@Pseudo` mixin で redirect し、支柱 log/planks と chain に
-同じ置換を適用する。
-
-依存元 `OreDeposit` piece は構造 JSON の block state ではなく、Java enum の
-`Blocks.COAL_ORE`, `Blocks.IRON_ORE`, `Blocks.REDSTONE_ORE`, `Blocks.GOLD_ORE`,
-`Blocks.LAPIS_ORE`, `Blocks.EMERALD_ORE`, `Blocks.DIAMOND_ORE` を
-`chanceReplaceSolid` で配置する。この配置は `StructurePiece#placeBlock` 経由なので、
-Better Mineshafts の piece class 条件により既存の ore 置換 map を適用する。TFC の ore
-block id は `tfc:ore/<ore>/<rock>` 形式なので、検出 rock を suffix に含める。
-
-Better Mineshafts 専用のブロック置換マップは追加しない。必要な置換は共通の
-`TfcBlockReplacementProcessor` に追加し、`StructureTemplateMixin` 経由の構造物にも
-同じ挙動を適用する。`barrel`, `rail`, `lantern`, `bed`, `anvil`, `smithing_table`
-など、既存マップにないブロックはこの段階では変換しない。
-
-Better Mineshafts の chest minecart、barrel、dungeon chest は全て vanilla
-`minecraft:chests/abandoned_mineshaft` を参照する。`bettermineshafts:` 名前空間の
-専用 loot table は依存元に存在しないため追加しない。loot 置換は
-`data/minecraft/loot_table/chests/abandoned_mineshaft.json` の上書きで行い、既存の
-overworld dungeon 互換と同じ方針が明確な item だけを shared loot table へ置換する。
-
-`structure_set` 上書きは行わない。
-
-### Better Fortresses
-
-- biome tag override は存在しない。依存元通り Nether 構造物のままにする。
-
-## TFC biome tag仕様
-
-biomeの実値は `src/main/resources/data/yungsbettertfc/tags/worldgen/biome` を正本とする。ここでは選定規則とtag間制約を仕様とし、同じbiome IDを全件転記しない。
-
-| Tag | 選定規則 |
+| Vanilla wood | TFC wood |
 | --- | --- |
-| `tfc_mineshaft_oak_biomes` | 温帯の森林・平地・低地。特殊砂漠、海洋、極寒、高山を除外 |
-| `tfc_mineshaft_desert_biomes` | yellow sand主体の乾燥地形 |
-| `tfc_mineshaft_red_desert_biomes` | red sand主体の乾燥地形 |
-| `tfc_mineshaft_mesa_biomes` | badlands/mesa相当の地形 |
-| `tfc_mineshaft_ice_biomes` | 氷河・極寒地形 |
-| `tfc_mineshaft_spruce_snowy_biomes` | 積雪森林・寒冷山地 |
-| `tfc_coastal_biomes` | 海岸・沿岸遷移地形 |
-| `tfc_deep_ocean_biomes` | 深海地形だけ |
-| `tfc_land_biomes` | YUNG陸上構造物を許可するTFC陸地。ocean、deep ocean、shore専用地形を除外 |
+| `oak` | `oak` |
+| `spruce` | `spruce` |
+| `birch` | `birch` |
+| `jungle`, `acacia` | `acacia` |
+| `dark_oak`, `cherry`, `bamboo` | `oak` |
+| `mangrove` | `mangrove` |
 
-- Mineshaft variant tagは重複を避け、1 biomeが複数variantへ同時分類されないようにする。
-- coastalとdeep oceanを混同しない。Ocean Monumentはdeep ocean、沿岸構造物はcoastalを使う。
-- TFC biome IDは気候そのものではなく地形分類である。温度・降水条件が必要な場合はbiome名の推測ではなくTFC climate placementを使う。
-- TFC側でbiomeが追加・改名された場合は、全tagの包含、重複、未分類を機械的に監査する。
-- tag JSONは `replace: false` を維持し、他data packの追加を不必要に消さない。
+For these nine families, planks use `tfc:wood/planks/<wood>`, stairs and slabs use `tfc:wood/planks/<wood>_stairs` and `_slab`, and log, wood, stripped_log, stripped_wood, fence, fence_gate, door, trapdoor, button, pressure_plate, sign, and wall_sign use `tfc:wood/<shape>/<wood>`. Nether Crimson and Warped use the same shape forms under `tfcoverdims:wood/`, with stem and hyphae corresponding to log and wood. They convert only in the Nether; hanging signs and other Nether vegetation remain Vanilla. Oak and other Overworld woods still use TFC forms in the Nether.
 
-## 戦利品仕様
+`finalizeProcessing` counts explicit wood block IDs from the original palette, using the longest matching wood name, once per block. Crimson and Warped count only in the Nether. The most frequent mapped wood supplies the utility hint; ties retain the first wood encountered, and an empty count defaults to TFC Oak. `chest`, `trapped_chest`, `lectern`, and `crafting_table` become `wood/chest/<wood>`, `wood/trapped_chest/<wood>`, `wood/lectern/<wood>`, and `wood/workbench/<wood>` in the hinted `tfc` or `tfcoverdims` namespace. Their NBT passes through unchanged.
 
-戦利品置換は [TFC互換loot table 共通再設計仕様](https://gist.github.com/claustra01/0b96699ab853bc17da8384426c6ffe5b)
-を正本とする。依存元JARおよびMinecraft 1.21.1の同名loot tableから
-上書きJSONと本節の変換仕様を正本とする。ローカル再生成にはGit管理外の
-`.tmp/scripts/regenerate_loot_tables.py` を使用できるが、既存の上書きJSONを入力にしてはならない。
+| Vanilla input | Output |
+| --- | --- |
+| `furnace`, `blast_furnace`, `smoker` | `tfc:firepit`; discard original Block Entity NBT and copy horizontal facing axis |
+| `torch`, `wall_torch` | `tfc:torch`, `tfc:wall_torch` |
+| `candle`, `<color>_candle` | `tfc:candle`, `tfc:candle/<color>` when registered |
+| `candle_cake`, `<color>_candle_cake` | `tfc:candle_cake`, `tfc:candle_cake/<color>` when registered |
+| `iron_bars`, `chain`, `iron_block`, `iron_trapdoor` | `tfc:metal/bars/wrought_iron`, `metal/chain/wrought_iron`, `metal/block/wrought_iron`, `metal/trapdoor/wrought_iron` |
+| `gold_block`, `raw_gold_block` | `tfc:metal/block/gold` |
+| `copper_block`, `cut_copper`, `cut_copper_slab`, `cut_copper_stairs` | `tfc:metal/block/copper`, `copper`, `copper_slab`, `copper_stairs` in that family |
+| `exposed_copper`, `exposed_cut_copper` and its slab/stairs; analogous `weathered_*` and `oxidized_*` | `tfc:metal/exposed_block/copper`, `weathered_block/copper`, or `oxidized_block/copper`, with `_slab` or `_stairs` for shapes |
+| `waxed_oxidized_cut_copper` and its slab/stairs only | `tfc:metal/oxidized_block/copper` and matching shapes; other waxed variants stay Vanilla |
+| Nether `coal_block` | `tfc:bituminous_coal`; Overworld coal block stays Vanilla |
 
-### 必ず保持する元仕様
+Cauldron, water/lava/powder snow cauldrons, barrel, lantern, soul lantern, campfire, soul campfire, soul torch, soul wall torch, anvil variants, smithing table, stonecutter, spawner, rail, and beds stay Vanilla with their state and NBT.
 
-- pool数、pool順、`rolls`、`bonus_rolls`
-- entry数、entry順、`weight`、`quality`
-- `conditions` とcount provider
-- 元の `set_count` の範囲および個数
-- エンチャント、damage、nameなど、完成品に適用可能な元function
-- YUNG系mod固有itemおよび置換対象外のバニラitem
-- 元itemのカテゴリ、装備slot、tool family、資源形態
-- 同条件entryを合算せず、元entryを一対一で残す
+## M02 conversion tables
 
-### 構造物profile
+The rock placeholder is detected geology in the Overworld and `basalt` in the Nether.
 
-- `ordinary`: abandoned mineshaft、simple dungeon、Better Dungeonsの通常dungeon
-- `dangerous`: small nether dungeon、Better Fortresses、Better Strongholds、
-  vanilla nether bridge
-- `lategame`: End City
-- Better Ocean Monumentsは、該当する置換対象がない限り依存元をそのまま保持する。
+| Vanilla input | TFC output family |
+| --- | --- |
+| `stone`, `andesite`, `granite`, `diorite`, `tuff`, including existing stairs/slabs/walls | `rock/raw/<rock>` and matching shapes |
+| `polished_andesite`, `polished_granite`, `polished_diorite`, `polished_tuff`, including stairs/slabs | `rock/smooth/<rock>` and matching shapes |
+| `cobblestone`, `mossy_cobblestone`, including stairs/slabs/walls | `rock/cobble/<rock>` and `rock/mossy_cobble/<rock>` shapes |
+| `stone_bricks`, `tuff_bricks`, including stairs/slabs/walls | `rock/bricks/<rock>` and matching shapes |
+| `mossy_stone_bricks`, including stairs/slabs/walls | `rock/mossy_bricks/<rock>` and matching shapes |
+| `cracked_stone_bricks` | `rock/cracked_bricks/<rock>` |
+| `chiseled_stone_bricks`, `chiseled_tuff`, `chiseled_tuff_bricks` | `rock/chiseled/<rock>` |
+| `smooth_stone`, `smooth_stone_slab` | `rock/smooth/<rock>` and slab |
+| `gravel`, `stone_button`, `stone_pressure_plate` | `rock/gravel`, `rock/button`, `rock/pressure_plate` for `<rock>` |
 
-### 金属tier
+`sandstone` and red sandstone use the matching yellow/red `raw_sandstone` family. Cut and chiseled variants use `cut_sandstone`; smooth variants use `smooth_sandstone`; registered stairs, slabs, and walls retain their shape. `sand` and `red_sand` become yellow and red TFC sand.
 
-- `ordinary` generic ingot: copper、bronze、bismuth bronze、black bronze、wrought iron
-- `ordinary` equipment: copper、bronze、bismuth bronze、black bronze
-- `dangerous` generic ingot: wrought iron、steel
-- `dangerous` equipment: wrought iron
-- `lategame` generic ingot: steel、black steel
-- `lategame` equipment: steel
-- red steelとblue steelはgeneric lootに含めない。
-- black steelは`lategame`のingot候補だけに含め、部品、装備、horse armorには使わない。
+| Vanilla soil | TFC soil output |
+| --- | --- |
+| `dirt` | `dirt/<soil>` |
+| `coarse_dirt` | `coarse_dirt/<soil>` |
+| `grass_block` | `grass/<soil>` |
+| `rooted_dirt` | `rooted_dirt/<soil>` |
+| `farmland` | `farmland/<soil>` |
+| `dirt_path` | `grass_path/<soil>` |
 
-### 資源カテゴリ
+Deepslate and Blackstone general building families remain unchanged. The explicit Nether keep list is Blackstone, Polished Blackstone, Basalt, Polished Basalt, Soul Sand, Soul Soil, Nether Gold Ore, Nether Quartz Ore, and Ancient Debris. Raw/cobble/mossy-cobble full-block conversion results become `tfc:rock/hardened/<rock>` only when the block directly below is air. Nether Netherrack similarly becomes `tfcoverdims:hardened_netherrack`; supported blocks and all stairs, slabs, and walls do not harden. No Overdims tags are changed.
 
-- diamond、emerald、lapis lazuli、amethyst shardは
-  `yungsbettertfc:shared/gems`へ置換する。
-- iron ingotとgold ingotはprofile別の
-  `yungsbettertfc:shared/ingots/<profile>`へ置換する。
-- iron nuggetは`yungsbettertfc:shared/small_ores/iron`へ置換し、hematite、magnetite、
-  limoniteのsmall oreから選ぶ。
-- gold nuggetとraw goldは`tfc:ore/small_native_gold`へ置換する。
-- nuggetをingotへ、ingotをrodやsheetへ変えてはならない。
-- generic ingot候補にrodやsheetを混在させてはならない。
+## Shared mcmods development rules
 
-### coal_like
+Child repositories can be checked out independently, so these rules remain in this repository.
 
-`yungsbettertfc:shared/coal_like`は次の4候補だけを含む。
+### Specifications and canonical files
 
-- `minecraft:charcoal`
-- `tfc:ore/bituminous_coal`
-- `tfc:ore/lignite`
-- `tfc:ore/graphite`
+- Use the uppercase filename `AGENTS.md`; do not create a lowercase `agents.md`.
+- Record maintained behavior in `AGENTS.md`, not unimplemented plans presented as current behavior.
+- Keep user-facing names, a short description, distribution links, and the build entry point in `README.md`. Do not duplicate implementation history or the full specification there.
+- Keep the repository's single existing licence file. Do not add another licence, template licence, or notice file.
+- Update `AGENTS.md` with changes to visible behavior, supported versions, dependencies, IDs, registrations, activation conditions, generation rules, or verification procedures.
+- Treat `gradle.properties`, Gradle configuration, mod metadata, implementation code, and bundled data as the canonical current values.
+- Do not change versions unless the task or implementation requires it.
 
-minecraft coalとcharcoalをこのtableへ置換する。全候補はblock itemではなく通常itemとする。`tfc:powder/graphite`は使用しない。
-graphiteは`coal_like`以外のshared tableへ入れない。
+### Research and compatibility
 
-### utility
+- Verify Minecraft, loader, TFC, and integration-mod behavior against sources or actual artifacts for the target version before fixing IDs, APIs, or JSON formats.
+- Prefer public APIs, registries, tags, recipes, loot, and world-generation data. Limit Mixins, accessors, and reflection to necessary targets.
+- Preserve required and optional dependency roles and metadata ordering. Do not reference an optional mod class from an unconditional load path.
+- Do not reference client-only classes from common or dedicated-server paths.
+- Preserve published registry IDs, resource namespaces, and config keys unless a breaking change is explicitly required.
+- Keep this mod's resources in its own namespace except for intentional tag additions or same-name data overrides.
 
-obsidian、crying obsidian、quartz、glowstone dustは
-`yungsbettertfc:shared/utility`へ置換する。候補は次の7種類とする。
+### Files and generated output
 
-- `tfc:powder/flux`
-- `minecraft:glass`
-- `minecraft:glass_pane`
-- `tfc:kaolin_clay`
-- `tfc:powder/wood_ash`
-- `tfc:powder/saltpeter`
-- `tfc:powder/sylvite`
+- Put dependency JARs, extracted files, comparison images, and temporary analysis or verification scripts under the ignored `.tmp/` directory.
+- Commit only scripts required by a normal clone, build, or CI workflow, unless `AGENTS.md` explicitly identifies another script as a maintained generator.
+- Keep generated resources and their specification reproducible; do not make a temporary helper the only source of behavior.
+- Save JSON as UTF-8 without a BOM and use the target Minecraft version's pack layout.
+- Do not include `.gradle/`, `build/`, `run/`, `runs/`, IDE metadata, dependency JARs, or extracted output in changes.
+- Treat this directory as an independent Git repository and preserve unrelated user changes.
 
-utilityにはcoal、charcoal、lignite、bituminous coal、graphiteを含めない。
-utility用の新規poolは追加せず、依存元のgeneric material/resource entryを置換する。
+### Implementation and verification
 
-### 食料、種、肥料、torch
+- Inspect existing registration, naming, resource layout, and generation paths before adding another implementation of the same responsibility.
+- Keep changes within the requested behavior; do not mix unrelated formatting, renames, dependency updates, or generated-resource replacements.
+- Use `./gradlew compileJava` for normal intermediate checks and `./gradlew build` for completion checks.
+- Parse all JSON after data changes and add consistency checks appropriate to tags, recipes, loot, models, textures, and generators.
+- Test optional integrations and Mixin and client/server boundaries both with and without the relevant mod, emphasizing dedicated-server class loading.
+- Start the Minecraft client only for behavior that requires runtime rendering or when explicitly requested.
+- Report verification that could not be run and do not present it as passing.
 
-- apple、bread、carrot、potato、glow berries、wheat、beetroot、melon sliceは
-  `yungsbettertfc:shared/produce`へ置換する。
-- beetroot seeds、melon seeds、pumpkin seeds、wheat seedsは
-  `yungsbettertfc:shared/seeds`へ置換する。
-- bone mealは`yungsbettertfc:shared/fertilizers`へ置換する。
-- `minecraft:torch`は`tfc:torch`へ置換する。
+## M01 verification
 
-### 装備family
+- The GameTest namespace is `yungsbettertfc`. Bootstrap tests use `data/yungsbettertfc/structure/empty.nbt` and write JUnit XML through the `yungsbettertfc.gametest.report` system property. The Gradle run writes `build/test-results/gametest/TEST-yungsbettertfc.BootstrapGameTests-<configuration>.xml`.
+- Run `./gradlew build` and `./gradlew runGameTestServer` for the five optional YUNG mods. Run `./gradlew -PoptionalYungMods=none runGameTestServer` and `./gradlew -PoptionalYungMods=betterdungeons runGameTestServer` for zero and one optional mod. Each run checks actual loaded mod IDs and the corresponding Mixin package gate, and places one structure for each loaded optional mod.
+- Run `./gradlew -PwithoutTfcOverdims=true -PoptionalYungMods=none runGameTestServer` to verify that NeoForge refuses startup and reports `tfcoverdims` as a missing required dependency of `yungsbettertfc` in `run/logs/latest.log`. Check the FML message because the development launcher can return success after the loading error. This negative check cannot be an in-game GameTest because dependency validation stops loading first; its expected result is recorded beside the GameTest entries in `tests/acceptance.json`.
 
-元装備のfamilyとarmor slotを維持し、次の候補だけを使用する。
+## M02 verification
 
-- pickaxe -> pickaxe head、propick head、pickaxe、propick
-- axe -> axe head、saw blade、axe、saw
-- hoe -> hoe head、scythe blade、hoe、scythe
-- sword -> sword blade、javelin head、mace head、sword、javelin、mace
-- shovel -> shovel head、shovel
-- knife -> knife blade、knife
-- shears -> shears
-- shield -> shield
-- bow -> vanilla bow
-- crossbow -> vanilla crossbow
-- helmet -> unfinished helmet、helmet
-- chestplate -> unfinished chestplate、chestplate
-- leggings -> unfinished greaves、greaves
-- boots -> unfinished boots、boots
-- horse armor -> profileの完成済みhorse armor
+- `ConversionGameTests` covers every rock, sandstone, and soil table row in Overworld/Nether contexts, verifies all mapped categories remain unchanged in an End/NONE context, and checks state inheritance and missing-registry fallback.
+- Its structure-pipeline checks detect TFC raw rock and soil below a placement origin and exercise template-indexed hardening for unsupported and supported full blocks and unsupported stairs, slabs, and walls.
 
-metal toolおよびarmorは、各部品候補のweightを2、各完成品候補のweightを1とし、
-部品:完成品の合計weightを2:1にする。未完成品が存在しないshears、shield、horse armor、
-bow、crossbowは完成品だけを候補にする。
+## M03 verification
 
-### function適用
+- `BuildingBlockConversionGameTests` covers all registered target shapes for every Overworld wood row and all Crimson/Warped rows, including inherited door, stair, and slab state and longest-match `dark_oak` hint parsing.
+- Structure-pipeline tests cover TFC and Overdims wood utilities, Oak fallback, unchanged hanging signs and chest NBT, all three firepit conversions with axis and NBT removal, unchanged cauldron state and barrel loot NBT, every candle color, light exceptions, and the maintained metal and keep-list rows.
 
-- `set_count`は元entry側に一度だけ残し、元のcount providerを変更しない。
-- 元lootに含まれる`minecraft:set_damage`は削除し、置換後itemへ適用しない。
-- `minecraft:set_name`は削除せず元entry側に保持する。このための個別shared tableは作成しない。
-- `enchant_with_levels`と`enchant_randomly`は元entry側に保持する。TFC 4.2.5の
-  金属部品とunfinished armorはenchantabilityを持たないため、生成結果は完成品だけが
-  enchantされる。
-- Better Strongholdsの`chests/cmd_yung`にある元のdiamond swordは特例とする。
-  shared equipment tableを参照せず、`tfc:metal/sword/wrought_iron`を100%生成し、
-  元のlevel 30 enchant、`set_name`、weight 1を維持する。
-- End Cityを含め、依存元にenchantがある完成装備はそのenchantを維持する。
+## M04 verification
 
-### shared table配置
+- `PlantOreAndEquipmentGameTests` covers every maintained plant row, both tall-seagrass halves, a three-block cactus, unchanged non-target plants, registered and missing potted outputs, all normal and Deepslate ore rows, detected-rock outputs, Granite fallback, and Nether-native ore exclusions.
+- Structure-pipeline checks cover ore replacement inside `final_state` NBT and its Nether exclusions. Entity-pipeline checks cover item frames, glow item frames, armor stands, every maintained Wrought Iron equipment category, incompatible data removal, unrelated entities, and the End exclusion.
 
-- `shared/gems`
-- `shared/ingots/ordinary`
-- `shared/ingots/dangerous`
-- `shared/ingots/lategame`
-- `shared/small_ores/iron`
-- `shared/coal_like`
-- `shared/utility`
-- `shared/produce`
-- `shared/seeds`
-- `shared/fertilizers`
-- `shared/equipment/<profile>/<family>`
+## M05 verification
 
-旧`metals_*`、`equipment_*`、`horse_armor_*`、`ranged_weapon` shared tableと、
-それら専用のitem tagは使用しない。
+- `LootTableGameTests` verifies that the 33 target tables load from their own mods, this mod ships no loot table, exactly the 33 modifiers are listed and decode with their profile, every modifier and tag JSON file is UTF-8 without a BOM, and the fertilizer tag resolves. It rolls every loaded target table and checks the replacement rules, including kept self-replacements.
+- The tests verify that Nether Bridge and End City Treasure have no modifier from this mod, verify the Overdims global-loot-modifier codec and modifier resources, and execute both Vanilla tables repeatedly to observe TFC replacement output.
+- Run `./gradlew runData` and confirm that `src/generated/resources` has no diff.
 
-### 検証
+## M06 verification
 
-loot変更時は少なくとも次を確認する。
+- `StructureIntegrationGameTests` verifies that all 12 YUNG biome-tag additions use `replace:false`, resolve their representative TFC biome, and retain representative dependency-mod members after tag merging.
+- Template-path tests verify the four target namespaces, existing-processor order, duplicate prevention, and the exclusions for Beneath, End City, other Vanilla templates, unknown namespaces, and templates without a known ID.
+- Dimension-path tests run automatically injected template settings in the Overworld, Nether, and End. They verify detected Rhyolite and TFC Spruce in the Overworld; Basalt, Oxisol, Overdims Crimson, and unchanged Blackstone in the Nether; and unchanged blocks and equipment plus no processor injection in the End.
+- Direct-placement tests verify the shared geology and wood-hint context, the runtime marker Mixins, and converted blocks placed by real Better Mineshafts and Better Dungeons Spider Dungeon pieces. They also verify the maintained abandoned-mineshaft loot override and the absence of this mod's own structure and structure-set definitions.
+- Run `./gradlew build` and `./gradlew runGameTestServer`. Re-run `runGameTestServer` with `-PoptionalYungMods=none`, `betterdungeons`, and the default five-mod configuration to verify optional Mixin gates on a dedicated server.
 
-- 全JSONをparseできる。
-- 依存元とのpool数、rolls、bonus rolls、entry数、weight、condition、countが一致する。
-- YUNG系mod固有itemが変化していない。
-- profileごとのtier上限を超えない。
-- red steelとblue steelが存在しない。
-- black steelがlategame ingot以外に存在しない。
-- ingot tableにingot以外、small ore tableにsmall ore以外が存在しない。
-- graphiteは`coal_like`内の`tfc:ore/graphite`だけである。
-- utilityにcoal_like資源が存在しない。
-- tool familyとarmor slotが一致する。
-- 部品:完成品のweightが2:1である。
-- 部品とunfinished armorの生成結果にenchantmentが付かない。
-- `set_count`が同じentryへ重複していない。
-- `--tfc-jar`で指定した実TFC JARのdatagen済みitem modelと全`tfc:` item idを照合し、欠落がない。
-- `./gradlew build`が成功する。Minecraftクライアントは検証のために起動しない。
+## M07 verification
+
+- `StructurePersistenceGameTests` verifies legal converted stair, door, sign, firepit, plant, chest, Barrel, and Cauldron states across the Overworld and Nether, including removal of upper cactus and tall-seagrass blocks.
+- Its reload test round-trips converted block states and Block Entity NBT through the same codecs used by world saves, verifying that TFC/Overdims chests and TFC firepits load, Barrel loot metadata survives, and door and Cauldron states remain legal.
+- `tests/e2e/structure-rendering.mjs` waits for spectator mode, loaded chunks, and language-independent command success before capturing each of the four generated YUNG structures. `palette-fixture.mjs` writes Vanilla-input NBT templates only into the disposable test world; `/place template` exercises automatic processor injection in the Overworld and Nether. The aquatic fixture supplies sand support and destination water; random plant growth is disabled for repeatable comparisons. The scenario checks converted IDs, legal orientation, retained Vanilla blocks, upper-plant removal, Barrel loot data, and readable Chest/Firepit Block Entities. It saves, stops the server and client, restarts the same world, reconnects, and compares block states and loot data at the same coordinates. Screenshots hide the GUI and cover the generated structures, converted palettes, and post-restart palettes.
+
+- After `./gradlew build`, run `node tests/e2e/run.mjs` for E2E alone with the configured five-YUNG-mod Harness runtime. This takes the Harness lock, fixes the disposable world seed to `731031`, runs the registered scenarios once, cleans up the runtime, and records `.tmp/e2e/latest-summary.json` plus per-run logs/screenshots; it does not start implementation or review agents.

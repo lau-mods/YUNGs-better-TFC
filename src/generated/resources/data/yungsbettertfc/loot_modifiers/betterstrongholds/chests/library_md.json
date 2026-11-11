@@ -1,0 +1,10 @@
+{
+  "type": "yungsbettertfc:structure_loot_replacement",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "betterstrongholds:chests/library_md"
+    }
+  ],
+  "profile": "dangerous"
+}

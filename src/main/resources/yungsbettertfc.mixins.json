@@ -2,12 +2,17 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.claustra01.yungsbettertfc.mixin",
+  "plugin": "net.claustra01.yungsbettertfc.mixin.YungsBetterTfcMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BetterMineshaftPieceMixin",
-    "BetterMineshaftStructurePieceMixin",
+    "StructurePieceMixin",
     "StructureTemplateManagerMixin",
-    "StructureTemplateMixin"
+    "StructureTemplateMixin",
+    "betterdungeons.SpiderDungeonPieceMixin",
+    "bettermineshafts.BetterMineshaftPieceMixin"
   ],
   "client": [],
-  "server": []
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

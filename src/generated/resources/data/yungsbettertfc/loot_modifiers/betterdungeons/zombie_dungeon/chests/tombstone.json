@@ -1,0 +1,20 @@
+{
+  "type": "yungsbettertfc:structure_loot_replacement",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "betterdungeons:zombie_dungeon/chests/tombstone"
+    }
+  ],
+  "enchantments": {
+    "minecraft:diamond_sword": {
+      "function": "minecraft:enchant_randomly",
+      "options": [
+        "minecraft:smite",
+        "minecraft:sweeping_edge",
+        "minecraft:fire_aspect"
+      ]
+    }
+  },
+  "profile": "ordinary"
+}
