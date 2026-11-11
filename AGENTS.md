@@ -186,12 +186,12 @@ Child repositories can be checked out independently, so these rules remain in th
 
 ## M03 verification
 
-- `M03GameTests` covers all registered target shapes for every Overworld wood row and all Crimson/Warped rows, including inherited door, stair, and slab state and longest-match `dark_oak` hint parsing.
+- `BuildingBlockConversionGameTests` covers all registered target shapes for every Overworld wood row and all Crimson/Warped rows, including inherited door, stair, and slab state and longest-match `dark_oak` hint parsing.
 - Structure-pipeline tests cover TFC and Overdims wood utilities, Oak fallback, unchanged hanging signs and chest NBT, all three firepit conversions with axis and NBT removal, unchanged cauldron state and barrel loot NBT, every candle color, light exceptions, and the maintained metal and keep-list rows.
 
 ## M04 verification
 
-- `M04GameTests` covers every maintained plant row, both tall-seagrass halves, a three-block cactus, unchanged non-target plants, registered and missing potted outputs, all normal and Deepslate ore rows, detected-rock outputs, Granite fallback, and Nether-native ore exclusions.
+- `PlantOreAndEquipmentGameTests` covers every maintained plant row, both tall-seagrass halves, a three-block cactus, unchanged non-target plants, registered and missing potted outputs, all normal and Deepslate ore rows, detected-rock outputs, Granite fallback, and Nether-native ore exclusions.
 - Structure-pipeline checks cover ore replacement inside `final_state` NBT and its Nether exclusions. Entity-pipeline checks cover item frames, glow item frames, armor stands, every maintained Wrought Iron equipment category, incompatible data removal, unrelated entities, and the End exclusion.
 
 ## M05 verification
@@ -202,7 +202,7 @@ Child repositories can be checked out independently, so these rules remain in th
 
 ## M06 verification
 
-- `M06GameTests` verifies that all 12 YUNG biome-tag additions use `replace:false`, resolve their representative TFC biome, and retain representative dependency-mod members after tag merging.
+- `StructureIntegrationGameTests` verifies that all 12 YUNG biome-tag additions use `replace:false`, resolve their representative TFC biome, and retain representative dependency-mod members after tag merging.
 - Template-path tests verify the four target namespaces, existing-processor order, duplicate prevention, and the exclusions for Beneath, End City, other Vanilla templates, unknown namespaces, and templates without a known ID.
 - Dimension-path tests run automatically injected template settings in the Overworld, Nether, and End. They verify detected Rhyolite and TFC Spruce in the Overworld; Basalt, Oxisol, Overdims Crimson, and unchanged Blackstone in the Nether; and unchanged blocks and equipment plus no processor injection in the End.
 - Direct-placement tests verify the shared geology and wood-hint context, the runtime marker Mixins, and converted blocks placed by real Better Mineshafts and Better Dungeons Spider Dungeon pieces. They also verify the maintained abandoned-mineshaft loot override and the absence of this mod's own structure and structure-set definitions.
@@ -210,7 +210,7 @@ Child repositories can be checked out independently, so these rules remain in th
 
 ## M07 verification
 
-- `M07GameTests` verifies legal converted stair, door, sign, firepit, plant, chest, Barrel, and Cauldron states across the Overworld and Nether, including removal of upper cactus and tall-seagrass blocks.
+- `StructurePersistenceGameTests` verifies legal converted stair, door, sign, firepit, plant, chest, Barrel, and Cauldron states across the Overworld and Nether, including removal of upper cactus and tall-seagrass blocks.
 - Its reload test round-trips converted block states and Block Entity NBT through the same codecs used by world saves, verifying that TFC/Overdims chests and TFC firepits load, Barrel loot metadata survives, and door and Cauldron states remain legal.
 - `tests/e2e/structure-rendering.mjs` waits for spectator mode, loaded chunks, and language-independent command success before capturing each of the four generated YUNG structures. `palette-fixture.mjs` writes Vanilla-input NBT templates only into the disposable test world; `/place template` exercises automatic processor injection in the Overworld and Nether. The aquatic fixture supplies sand support and destination water; random plant growth is disabled for repeatable comparisons. The scenario checks converted IDs, legal orientation, retained Vanilla blocks, upper-plant removal, Barrel loot data, and readable Chest/Firepit Block Entities. It saves, stops the server and client, restarts the same world, reconnects, and compares block states and loot data at the same coordinates. Screenshots hide the GUI and cover the generated structures, converted palettes, and post-restart palettes.
 
